@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="gb2312"?>
+<ufinterface roottag="card" billtype="h1" subtype=""
+             replace="Y" receiver="" sender="zch1" isexchange="Y" proc="add"
+             filename="固定资产凭证.xml">
+    <!-- cardid 唯一的序列号 -->
+    <card id="fa-h1-20190904">
+        <!--一张卡片应有一个fa_card_head和多个entry组成,下面的值若没有特别说明,则可以为空 -->
+        <!--def_quote:卡片自定义项的编码,对应表fa_carditem中的itemcode字段 -->
+        <!--卡片主卡信息 -->
+        <card_head>
+            <!--公司编码，不能为空，需要对应基础数据（公司目录） OK-->
+            <company>0101</company>
+            <!--资产编码，不能重复,不能为空 OK-->
+            <asset_code>0400143</asset_code>
+            <!--资产名称，不能为空 OK-->
+            <asset_name>test1</asset_name>
+            <!--开始使用日期，不能为空 ???判断开始-->
+            <begindate>2018-8-20</begindate>
+            <!--币种名称，不能为空，需要对应基础数据（外币档案）,建议值"人民币" OK-->
+            <fk_currency>CNY</fk_currency>
+            <!--币种单位,建议值"元" OK-->
+            <currunit>元</currunit>
+            <!--录入人名称，不能为空 OK-->
+            <recorder>ty</recorder>
+            <!--录入日期，一般输入导入数据的当日，不能为空 OK-->
+            <recorddate>2018-8-10</recorddate>
+            <!--使用人编码，可以为空，如果有值需要对应基础数据（人员档案） OK-->
+            <assetuser></assetuser>
+            <!--规格型号 OK-->
+            <spec>赛阳500</spec>
+            <!--存放地点 OK-->
+            <position>四仓库</position>
+            <!--工作量单位 ???-->
+            <workloanunit>小时</workloanunit>
+            <!--增加方式编码，不能为空，需要对应基础数据（增减方式） ???写死-->
+            <fk_addreducestyle>0101</fk_addreducestyle>
+            <!--资产套号 ???-->
+            <assetsuit_code>001</assetsuit_code>
+            <!--使用部门编码，不能为空，需要对应基础数据（部门档案） OK-->
+            <fk_usedept>15</fk_usedept>
+            <!--管理部门编码，不能为空，需要对应基础数据（部门档案） OK-->
+            <fk_mandept>31</fk_mandept>
+            <!--折旧承担部门，0表示使用部门，1表示管理部门，不能为空 ???-->
+            <paydept_flag>0</paydept_flag>
+            <!--会计年，不能为空 ???-->
+            <accyear>2018</accyear>
+            <!--会计月，不能为空 ???-->
+            <period>08</period>
+            <!--原币原值，不能为空 ???-->
+            <originvalue>333</originvalue>
+            <!--本币原值，不能为空 ???-->
+            <localoriginvalue>333</localoriginvalue>
+            <!--辅币原值 ???-->
+            <fracoriginvalue>0</fracoriginvalue>
+            <!--工作总量 ???-->
+            <allworkloan>0</allworkloan>
+            <!--使用月限，不能为空 ???-->
+            <servicemonth>40</servicemonth>
+            <!--累计折旧，不能为空 ???-->
+            <accudep>0</accudep>
+            <!--累计工作量 ???-->
+            <accuworkloan>0</accuworkloan>
+            <!--减值准备 ???-->
+            <predevaluate>0</predevaluate>
+            <!--已计提月份，不能为空 ???-->
+            <usedmonth>0</usedmonth>
+            <!--月工作量 ???-->
+            <monthworkloan></monthworkloan>
+            <!--单位折旧 ???-->
+            <depunit></depunit>
+            <!--净残值率,取％前面的数字,不能为空 ???-->
+            <salvagerate>1</salvagerate>
+            <!--净残值,若上面的净残值率不等于0,则净残值不能为空 ???-->
+            <salvage>11</salvage>
+            <!--原值卡片标记，0表示原始卡片，1表示新增卡片，不能为空 ???-->
+            <newasset_flag>0</newasset_flag>
+            <!--资产类别编码,末级，不能为空，需要对应基础数据（资产类别） ???-->
+            <fk_category>04</fk_category>
+            <!--使用状况编码，末级,不能为空，需要对应基础数据（使用状况） ???-->
+            <fk_usingstatus>02</fk_usingstatus>
+            <!--折旧方法编码，不能为空，需要对应基础数据（折旧方法） ???-->
+            <fk_depmethod>03</fk_depmethod>
+            <!--项目档案编码，需要对应基础数据(项目管理档案) ???-->
+            <fk_jobmngfil></fk_jobmngfil>
+            <!--供应商编码，需要对应基础数据（供应商档案） ???-->
+            <fk_provider></fk_provider>
+            <!-- 来源系统类型 ，不能为空，6代表EPMS,7代表TGPMS ???-->
+            <source>7</source>
+        </card_head>
+
+        <!--以下为卡片自定义项 -->
+        <card_body>
+            <entry>
+                <!--卡片自定义项名称，不能为空 -->
+                <def_quote>记账日期</def_quote>
+                <!--自定义项的值 -->
+                <def_value>2006-06-02</def_value>
+            </entry>
+            <entry>
+                <def_quote>管理人</def_quote>
+                <def_value>gggg</def_value>
+            </entry>
+            <entry>
+                <def_quote>凭证号</def_quote>
+                <def_value>568</def_value>
+            </entry>
+            <entry>
+                <def_quote>科目代码</def_quote>
+                <def_value>0501</def_value>
+            </entry>
+            <entry>
+                <def_quote>科目名称</def_quote>
+                <def_value>固定资产</def_value>
+            </entry>
+            <entry>
+                <def_quote>牌照号</def_quote>
+                <def_value>鄂E-A3409</def_value>
+            </entry>
+            <entry>
+                <def_quote>出厂编号</def_quote>
+                <def_value>688775333</def_value>
+            </entry>
+            <entry>
+                <def_quote>计量单位</def_quote>
+                <def_value>吨</def_value>
+            </entry>
+        </card_body>
+    </card>
+</ufinterface>

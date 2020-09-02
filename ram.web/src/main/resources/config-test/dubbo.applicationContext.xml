@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+    http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="${spring.application.name}"/>
+    <!-- 使用multicast广播注册中心暴露发现服务地址 -->
+    <dubbo:registry protocol="zookeeper" address="${zookeeper.connect}" file="${dubbo.cache}"/>
+    <dubbo:consumer version="${dubbo.provider.version}"/>
+    <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
+    <!-- base -->
+    <dubbo:reference id="userService" check="false" interface="com.mine.base.user.service.IUserService"/>
+    <dubbo:reference id="menuService" check="false" interface="com.mine.base.menu.service.IMenuService"/>
+    <dubbo:reference id="dictServcie" check="false" interface="com.mine.base.dict.service.IDictService"/>
+    <dubbo:reference id="permissionServcie" check="false"
+                     interface="com.mine.base.permission.service.IPermissionService"/>
+    <!--flowable-->
+    <dubbo:reference id="apiFlowableProcessInstanceService" check="false"
+                     interface="com.mine.product.flowable.api.service.IApiFlowableProcessInstanceService"
+                     version="${flowable.consumer.service.version}"/>
+    <dubbo:reference id="apiFlowableProcessDefinitionService" check="false"
+                     interface="com.mine.product.flowable.api.service.IApiFlowableProcessDefinitionService"
+                     version="${flowable.consumer.service.version}"/>
+    <dubbo:reference id="apiFlowableTaskService" check="false"
+                     interface="com.mine.product.flowable.api.service.IApiFlowableTaskService"
+                     version="${flowable.consumer.service.version}"/>
+    <dubbo:reference id="apiFlowableWorkDetailService" check="false"
+                     interface="com.mine.product.flowable.api.service.IApiFlowableWorkDetailService"
+                     version="${flowable.consumer.service.version}"/>
+</beans>

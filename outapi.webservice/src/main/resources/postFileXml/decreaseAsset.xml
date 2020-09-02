@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="gb2312"?>
+<ufinterface roottag="bill" billtype="h2" subtype=""
+             replace="Y" receiver="" sender="zch1" isexchange="Y" proc="add"
+             filename="reduce_card.xml">
+    <!-- billid 唯一的序列号 -->
+    <bill id="fa-h2-20190904">
+        <bill_head>
+            <!-- 来源系统类型 ，不能为空，6代表EPMS,7代表TGPMS -->
+            <source>7</source>
+            <!--公司编码，不能为空，需要对应基础数据（公司目录） OK-->
+            <company>0101</company>
+            <!--单据号，不能为空 ???-->
+            <bill_code>JS1909040006</bill_code>
+            <!--资产编码，不能为空 OK-->
+            <asset_code>0400143</asset_code>
+            <!--操作员编码，不能为空，需要对应基础数据（操作员）OK -->
+            <recorder>ty</recorder>
+            <!--录入日期，一般输入导入数据的当日，不能为空 OK-->
+            <recorddate>2018-8-20</recorddate>
+            <!--减少方式编码，不能为空，需要对应基础数据（增减方式） ???-->
+            <fk_addreducestyle>0206</fk_addreducestyle>
+            <!--清理收入 ???-->
+            <income>33</income>
+            <!--清理费用  ???-->
+            <expense>33</expense>
+            <!--减少原因  ???-->
+            <reason>test2</reason>
+            <!-- 来源系统类型 ，不能为空，6代表EPMS,7代表TGPMS ???-->
+            <source>7</source>
+        </bill_head>
+    </bill>
+</ufinterface>
+
+

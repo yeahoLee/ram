@@ -1,0 +1,224 @@
+/* 公共样式 */
+
+/****************************滚动条通用样式******************************/
+.hr-css {/*内嵌水平线*/
+	width:100%;
+	margin:0 auto;
+	border: 0;
+	height: 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 5px solid rgba(255, 255, 255, 0.3);
+}
+
+body::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 2px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 2px;
+}
+body::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.1);
+}
+body::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    border-radius: 0;
+    background: rgba(0,0,0,0);
+}
+/****************************滚动条通用样式******************************/
+
+/****************************按钮通用样式******************************/
+/*按钮内部文字和图标间距*/
+.btn .fa{margin-right: 8px}
+/****************************按钮通用样式******************************/
+
+/****************************顶部条通用样式******************************/
+/*固定按钮条*/
+.top-menu-bar{
+	width: 100%; 
+	height: 46px; 
+	padding: 6px 20px 0px 10px; 
+	position: fixed;
+	background: #F5F5F5; 
+	z-index: 999;
+}
+
+/*按钮居右*/
+.top-menu-bar .top-btns-right{float: right;}
+.top-menu-bar .top-btns-right .btn{margin-left: 6px}
+.top-menu-bar .top-btns-right .dropdown-toggle{margin-left: 10px}
+
+/*按钮居左*/
+.top-menu-bar .top-btns-left{float: left;}
+.top-menu-bar .top-btns-left .btn{margin-right: 6px}
+
+/*导航条*/
+.top-menu-bar .top-btns-navigation{
+	float: left;
+	margin-top: 7px;
+}
+
+.top-menu-bar .top-btns-navigation span{
+	margin-right: 4px;
+	font-size: 14px;
+}
+
+.top-menu-bar .top-btns-navigation i{
+	margin-right: 4px;
+	font-size: 18px;
+}
+
+.top-menu-bar .top-btns-navigation .navigatio-home{
+	font-weight: 700;
+}
+/****************************顶部条通用样式******************************/
+
+/*****************************列表通用样式*******************************/
+.list-main-body{
+
+}
+/*****************************列表通用样式*******************************/
+
+/****************************详情页通用样式******************************/
+.details-main-body{
+	background-color: #FFFFFF; 
+	position:absolute; 
+	top:46px; 
+	border:1px solid #ddd;
+	width: -moz-calc(100% - 20px);
+	width: -webkit-calc(100% - 20px);
+	width: calc(100% - 20px); 
+	margin: 0px 10px; 
+	padding: 0px 10px 10px 10px;
+}
+
+/*调整原有格式*/
+.details-main-body .col-lg-12{
+	padding: 10px 0px 0px 0px;
+}
+/****************************详情页通用样式******************************/
+
+/****************************字体通用样式******************************/
+/*按钮字体间距 and 字体大小*/
+.btn-font{
+	size: 14px;
+	letter-spacing: 2px;
+}
+
+/****************************字体通用样式******************************/
+
+/*****************************搜索栏通用样式******************************/
+.search-bar{
+	/*height:50px;*/
+	padding-top: 5px;
+	/*padding-left: 10px;*/
+}
+/*输入框*/
+.search-bar .textbox {
+	margin-right: 5px;
+	height: 34px;
+	width: 212px;
+	margin-left: -4px;
+	margin-top: -2px;
+}
+.search-bar .textbox .textbox-text{
+    height: 35px;
+}
+
+/*搜索框左边4个文字样式*/
+.search-bar .label-identical{
+    width:80px;
+    height: 34px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    line-height: 32px;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+/*搜索框左边2个文字样式*/
+.search-bar .label-identical-3{
+    width:50px;
+    height: 34px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    line-height: 32px;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+/*搜索栏中按钮*/
+.search-bar .btn{margin-right: 5px;}
+/*****************************搜索栏通用样式******************************/
+
+/******************************bootstrap表格通用样式******************************/
+/* 调整面包屑 原有格式 */
+.table-bordered { 
+	margin: 0px;
+}
+
+/*按钮内部文字和图标间距*/
+.table-bordered .fa{
+	margin-right: 8px;
+}
+
+/*表格标题*/
+.table-bordered .table-head{
+	font-size: 14px;
+	font-weight: 700;
+}
+
+/*表格单元格标题*/
+.table-bordered .table-title{
+	width:11%;
+	background-color: #f5f5f5;
+	font-size: 14px;
+}
+
+/*表格单元格内容*/
+.table-bordered .table-content{
+	width:22%;
+}
+/******************************bootstrap表格通用样式******************************/
+
+/******************************Easyui通用样式******************************/
+/*表格*/
+.datagrid-cell{
+    height: 35px;
+    line-height: 35px;
+	font-size: 14px;
+}
+.datagrid-header .datagrid-cell span{
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/*面板*/
+.panel-header {
+	background-color: #f5f5f5;
+}
+.panel-title {
+	font-size: 14px;
+	font-weight: bold;
+	color: #292929;
+	height: 26px;
+	line-height: 26px;
+	background-color: #f5f5f5;
+	margin-left: 6px;
+}
+
+/*标签*/
+span.label {
+	display: inline-block;
+	height: 22px;
+	line-height: 22px;
+	font-size: 75%;
+	color: #fff;
+	border-radius: .25em;
+	margin: 2px 4px 2px 0;
+	padding: 0px 5px;
+}
+/******************************Easyui通用样式******************************/
+
+
+
+

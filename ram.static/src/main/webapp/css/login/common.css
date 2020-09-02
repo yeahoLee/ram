@@ -1,0 +1,435 @@
+
+body, table, div, span, p, ul, li, h1, h2, h3, h4, h5 {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    list-style: none;
+}
+
+body {
+    color: #174b73;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+}
+
+#MainLayout .header {
+    clear: both;
+    height: 107px;
+    background: url(../images/header.jpg) no-repeat top right;
+}
+
+#MainLayout .header h1 {
+    float: left;
+    display: block;
+    height: 78px;
+    width: 436px;
+    background: url(../images/header_h1.png);
+    margin: 0px;
+}
+
+#MainLayout .header .info .version {
+    padding-left: 10px;
+    float: left;
+    width: 250px;
+    line-height: 29px;
+    height: 29px;
+    color: #fff;
+}
+
+#MainLayout .header .info {
+    height: 29px;
+    position: absolute;
+    top: 78px;
+    left: 0px;
+    width: 100%;
+    background: #fff url(../images/header_info.gif) repeat-x;
+}
+
+#MainLayout .header .info .skins {
+    float: right;
+    padding-right: 10px;
+    margin-top: 2px !important;
+}
+
+#MainLayout .header .navigation {
+    clear: both;
+    height: 72px;
+    width: 650px;
+    position: absolute;
+    top: 5px;
+    right: 25px;
+    margin: 0px;
+    /* background: url(../images/navigation.gif) no-repeat; */
+}
+
+#MainLayout .header .navigation li a span {
+    height: 24px;
+    display: block;
+    cursor: hand;
+    margin-bottom: 4px;
+    _height: 16px;
+    _line-height: 16px;
+    _margin-top: 8px;
+}
+
+#MainLayout .header .navigation li {
+    float: right;
+    margin: 0px;
+    width: 78px;
+    height: 72px;
+    text-align: center;
+    list-style-type: none;
+    background: url(../images/nav_dot.png) no-repeat center right;
+    _background: none;
+    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/nav_dot.png", sizingMethod="crop");
+    cursor: hand;
+}
+
+#MainLayout .header .navigation li a:hover, .header .navigation li a.current {
+    color: #ffea39;
+    background: url(../images/navigation_li_hover.png) no-repeat center top;
+    _background: none;
+    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/navigation_li_hover.png", sizingMethod="crop");
+}
+
+#MainLayout .header .navigation li a {
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    height: 66px;
+    width: 100%;
+    text-align: center;
+    outline: none;
+}
+
+#MainLayout .header .navigation li a img {
+    margin-top: 2px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+    _width: 42px !important;
+    _height: 42px !important;
+}
+
+.dataTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.dataTable .title {
+    background-color: #e0ecff;
+}
+
+.dataTable td {
+    padding: 5px 5px 5px 5px;
+    border-color: #95b8e7;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 12px
+}
+
+.keyword_results_div {
+    width: 100%;
+}
+
+.keyword_result_div {
+    border: solid gray 1px;
+    padding: 5px;
+    float: left;
+    margin: 5px;
+}
+
+.keyword_result_div p {
+    float: left;
+    margin: 5px;
+}
+
+.keyword_result_div img {
+    float: left;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+/* 启动流程 */
+.datalist h2 {
+    background-color: rgb(223, 234, 251);
+    border-bottom: 1px solid #A8CFEB;
+    font-size: 12px;
+    margin: 0px;
+    color: #3a6683;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+#newflowTab a:hover {
+    color: red;
+    text-decoration: none;
+}
+
+#newflowTab a, a:link, a:visited {
+    color: #174b73;
+    text-decoration: none;
+}
+
+.mt10 a, a:link, a:visited {
+    color: #174b73;
+    text-decoration: none;
+}
+
+.mt10 a:hover {
+    color: red;
+    text-decoration: none;
+}
+
+.flow-item {
+    float: left;
+    margin-left: 30px;
+}
+
+.flow-item img {
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+}
+
+#itemdetail #dheader {
+    background: url(../images/dialog_header.gif) no-repeat right top;
+    height: 58px;
+    border-bottom: 1px solid #36A1DF;
+    margin: 0px;
+    padding: 0px;
+}
+
+#itemdetail #dheader h1 {
+    background: url(../images/dialog_h1.gif) no-repeat 0 0;
+    position: absolute;
+    font-size: 11pt;
+    /* line-height: 58px; */
+    padding-left: 138px;
+    color: #fff;
+    margin: 0px;
+}
+
+#itemdetail #dheader ul {
+    padding: 15px 0px;
+    text-align: right;
+    margin-right: 20px;
+}
+
+#itemdetail #dheader li {
+    display: inline;
+}
+
+#itemdetail #dheader a {
+    background: url(../images/fs_btnl.gif) no-repeat left top;
+    padding: 0px 0px 0px 3px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#itemdetail #dheader a span {
+    background: url(../images/fs_btnr.gif) no-repeat right top;
+    height: 31px;
+    line-height: 31px;
+    display: inline-block;
+    color: #185ea3;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 0px 20px 0px 17px;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    WORD-BREAK: keep-all;
+}
+
+/* ���������˵� */
+.aside .nav {
+    /*background: url(../images/nav_ico.png) no-repeat;*/
+}
+
+/* fix safari 4*/
+ul, menu, dir {
+    margin: 0;
+    padding: 0;
+}
+
+.aside .nav li {
+    border-bottom: 1px solid #c0dcf1;
+}
+
+.aside .nav li li {
+    border: none;
+}
+
+.aside .nav li a {
+    text-decoration: none;
+}
+
+.aside .nav li a:hover {
+    color: #0066cc;
+}
+
+.aside .nav li a.menu_active {
+    color: #0066cc;
+}
+
+.aside .nav li a.primary_menu {
+    display: block;
+    height: 29px;
+    line-height: 29px;
+    background: url(../images/bt_sider.jpg) 0 -29px repeat-x;
+    font-weight: bold;
+    color: #095685;
+}
+
+.aside .nav li a.primary_menu:hover {
+    background: url(../images/bt_sider.jpg) 0 0px repeat-x;
+    font-weight: bold;
+    color: #fff;
+}
+
+.aside .nav li.nav_active a.primary_menu {
+    background: url(../images/bt_sider.jpg) 0 -109px repeat-x;
+    color: #fff;
+    font-weight: bold;
+}
+
+.aside .nav li a.primary_menu span {
+    display: block;
+    padding-left: 40px;
+}
+
+/* �����˵� */
+.aside .nav li .sub_menu {
+    display: none;
+    position: relative;
+}
+
+.aside .nav li.nav_active .sub_menu {
+    display: block;
+}
+
+.aside .nav li ul li {
+    height: auto !important;
+}
+
+.aside .nav li ul li a {
+    color: #000e3f;
+    display: block;
+    min-height: 24px;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 40px;
+    background: url(../images/bt_sider.jpg) 0 -60px repeat-x;
+}
+
+.aside .nav li ul li.sub_active a {
+    background: url(../images/bt_sider.jpg) 0 -85px repeat-x;
+    height: 25px;
+    line-height: 25px;
+}
+
+/* �����˵� */
+.aside .nav li .sec_menu {
+    display: none;
+    position: relative;
+    overflow-y: auto;
+}
+
+.aside .nav li.nav_active .sec_menu {
+    display: block;
+}
+
+.aside .nav li ul li ul li {
+    height: auto !important;
+}
+
+.aside .nav li ul li ul li a {
+    color: #000e3f;
+    display: block;
+    min-height: 24px;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 40px;
+    background: none;
+}
+
+/** easyui panel */
+/* .panel {
+	margin-bottom: 5px;
+} */
+
+/* 修复分页错位 */
+.pagination {
+    display: block;
+}
+
+/* 修复datagrid加载错位 */
+.datagrid-mask-msg {
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+}
+
+/*bootstrap兼容问题和easyui的bug*/
+.panel-header, .panel-body {
+    border-width: 0px;
+}
+
+.datagrid, .combo-p {
+    border: solid 1px #D4D4D4;
+}
+
+.datagrid * {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.easyui-layout * {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+ 
+    /* 按钮颜色 */
+.btn.btn-xs.btn-primary i {
+    margin-right: 5px;
+}
+
+/* 对话框按钮 */
+.mn-dialog-bottom-btns {
+    padding: 2px;
+    text-align: right;
+    height: 32px
+}
+
+.btn.btn-xs.btn-primary.mn-dialog-bottom-btn {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* 图标 */
+i.fa {
+    margin-right: 5px;
+}
+
+i.far {
+    margin-right: 5px;
+}
+
+i.fas {
+    margin-right: 5px;
+}
+
+i.fab {
+    margin-right: 5px;
+}
+

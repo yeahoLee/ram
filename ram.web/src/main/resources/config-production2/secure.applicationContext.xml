@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- 非拦截设置 -->
+    <security:http pattern="/local_login" security="none"/>
+    <security:http pattern="/local_oauth_login" security="none"/>
+    <security:http pattern="/oauth_login" security="none"/>
+    <security:http pattern="/oauth_user" security="none"/>
+    <security:http pattern="/single_login_callback" security="none"/>
+    <security:http pattern="/logout" security="none"/>
+    <security:http pattern="/resources/**" security="none"/>
+    <security:http pattern="/app/**" security="none"/>
+    <!-- 拦截设置 use-expressions:Spring 表达式语言配置访问控制 -->
+    <security:http auto-config="true" use-expressions="false">
+        <security:csrf disabled="true"/>
+        <security:headers>
+            <security:frame-options policy="SAMEORIGIN"/>
+        </security:headers>
+        <security:intercept-url pattern="/**" access="ROLE_USER"/>
+        <security:form-login login-page="/local_login" authentication-success-handler-ref="expaiSuccessHandler"/>
+        <security:logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID"/>
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider
+                user-service-ref="mineSpringSecureUserService"></security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

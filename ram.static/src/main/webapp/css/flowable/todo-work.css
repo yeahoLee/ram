@@ -1,0 +1,36 @@
+/*待办工作样式*/
+/* 全局按钮样式 */
+
+/*时间日期至~*/
+.different-1{
+    margin-left:16px;
+}
+.different-2{
+    width:10px;margin-left: -1px;margin-right: 3px;font-size: 16px;font-weight: 700;
+}
+
+
+
+/*----------表格副标题----------*/
+.datagrid-view{
+    width: 800px;
+    height: 250px;
+}
+.datagrid-view .datagrid-header .datagrid-header-inner .datagrid-header-row{
+    height: 38px;
+    font-weight: 700;
+}
+.datagrid-cell-c1-value  {
+    text-align: center;
+}
+.datagrid-toolbar{
+    height: 55px;
+}
+/*页码*/
+/*.datagrid .datagrid-pager {
+    display: block;
+    margin-top: -45px;
+    border-width: 1px 0px 0px;
+    border-style: solid;
+}*/
+

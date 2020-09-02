@@ -1,0 +1,260 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.mine.product.szmtr</groupId>
+        <artifactId>ram</artifactId>
+        <version>1.0</version>
+    </parent>
+    <artifactId>outapi.webservice</artifactId>
+    <packaging>war</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>db.datasource.jndi</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>db.springdata</artifactId>
+            <version>0.4</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>org.javassist</groupId>
+                </exclusion>
+<!--                 <exclusion> -->
+<!--                     <artifactId>jboss-logging</artifactId> -->
+<!--                     <groupId>org.jboss.logging</groupId> -->
+<!--                 </exclusion> -->
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>common.webservice</artifactId>
+            <version>0.4</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>secure.redis.web</artifactId>
+            <version>0.4</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>common.web.jar</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.platform</groupId>
+            <artifactId>secure.redis.web.jar</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>3.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>3.2.7</version>
+        </dependency>
+        <!-- log4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <!-- dubbo dependency -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-web</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.20.0-GA</version>
+        </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- base.4 -->
+        <!-- <dependency>
+            <groupId>com.mine.base</groupId>
+            <artifactId>user-interface</artifactId>
+            <version>0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.base</groupId>
+            <artifactId>dict-interface</artifactId>
+            <version>0.4</version>
+        </dependency> -->
+        <!-- <dependency>
+            <groupId>com.mine.product.szmtr</groupId>
+            <artifactId>base.interface</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.product.szmtr</groupId>
+            <artifactId>asset.interface</artifactId>
+            <version>1.0</version>
+        </dependency> -->
+        <dependency>
+            <groupId>com.mine.product.szmtr</groupId>
+            <artifactId>base.impl</artifactId>
+            <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.mine.product.szmtr</groupId>
+            <artifactId>asset.impl</artifactId>
+            <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    
+    <profiles>
+        <profile>
+            <!-- 本地开发环境 -->
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+            </properties>
+<!--             <activation> -->
+<!--                 <activeByDefault>true</activeByDefault> -->
+<!--             </activation> -->
+        </profile>     
+        <profile>
+            <!-- 测试环境 -->
+            <id>apitest</id>
+            <properties>
+                <profiles.active>apitest</profiles.active>
+            </properties>
+			<activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod202</id>
+            <properties>
+                <profiles.active>prod202</profiles.active>
+            </properties>
+<!--             <activation> -->
+<!--                  <activeByDefault>true</activeByDefault>  -->
+<!--              </activation>  -->
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod203</id>
+            <properties>
+                <profiles.active>prod203</profiles.active>
+            </properties>
+<!--            <activation> -->
+<!--                <activeByDefault>true</activeByDefault> -->
+<!--            </activation> -->
+        </profile>
+    </profiles>
+    
+    <build>
+    <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->
+                <excludes>
+                    <exclude>config-dev/*</exclude>
+                    <exclude>config-prod202/*</exclude>
+                    <exclude>config-apitest/*</exclude>
+                    <exclude>config-prod203/*</exclude>
+                    <exclude>config/*</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <!-- 根据参数指定资源目录 -->
+                <directory>src/main/resources/config-${profiles.active}</directory>
+                <!-- 指定编译后的目录即生成文件位置（默认为WEB-INF/class） -->
+                <targetPath>config</targetPath>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>outapi</warName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://svn.m-data.com.cn:8081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>

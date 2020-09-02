@@ -1,0 +1,186 @@
+/** Login style **/
+#login {
+    background: #dff2ff url(sso_bg.jpg) repeat-x left top;
+    font-size: 9pt;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    text-align: center;
+    font-family: Arial, 宋体;
+}
+
+#login .container {
+    width: 900px;
+    height: 485px;
+    background: url(sso_content.jpg) no-repeat center top;
+    background-repeat: no-repeat;
+    margin: 0px auto;
+    position: relative;
+    text-align: left;
+}
+
+#login .header {
+    width: 271px;
+    height: 58px;
+    position: absolute;
+    left: 190px;
+    top: 85px;
+}
+
+#login .header h1 {
+    display: none;
+}
+
+#login .header .header-item {
+    height: 58px;
+    width: 549px;
+    padding-top: 5px;
+}
+
+#login .header .header-item table {
+    font-size: 23px;
+    font-weight: bold;
+    font-family: 黑体;
+    color: #ff8000;
+}
+
+#login .content {
+    position: absolute;
+    top: 170px;
+    left: 300px;
+}
+
+#login .content table {
+}
+
+#login .content table th {
+    width: 60px;
+    line-height: 35px;
+    padding: 3px;
+    font-weight: normal;
+    text-align: right;
+}
+
+#login .content table td {
+    line-height: 35px;
+    width: 250px;
+}
+
+#login .content table td input.login_text {
+    width: 196px;
+    background: url(sso_input.gif) no-repeat left center;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+    border: 0px;
+}
+
+#login .content table td input.login_text:hover {
+    background: url(sso_input_over.gif) no-repeat left center;
+}
+
+#login .content table thead td { /* padding-left:20px; */
+    height: 55px; /* line-height:1.5em; */
+}
+
+#login .content table tfoot td {
+    padding-left: 40px;
+}
+
+#login .content a.linkbtn1 {
+    text-decoration: none;
+    background: url(linkbtn1.gif) no-repeat left top;
+    padding-left: 3px;
+    height: 23px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#login .content a.linkbtn1 span {
+    cursor: pointer;
+    color: White;
+    background: url(linkbtn1.gif) no-repeat right top;
+    position: relative;
+    margin-right: -3px;
+    height: 23px;
+    line-height: 23px;
+    padding: 0px 8px;
+    display: inline-block;
+}
+
+#login .content a.linkbtn1:hover {
+    background: url(linkbtn1_over.gif) no-repeat left top;
+}
+
+#login .content a.linkbtn1:hover span {
+    background: url(linkbtn1_over.gif) no-repeat right top;
+}
+
+#login .content a.linkbtn2 {
+    text-decoration: none;
+    background: url(linkbtn2.gif) no-repeat left top;
+    padding-left: 3px;
+    height: 23px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#login .content a.linkbtn2 span {
+    cursor: pointer;
+    color: White;
+    background: url(linkbtn2.gif) no-repeat right top;
+    position: relative;
+    margin-right: -3px;
+    height: 23px;
+    line-height: 23px;
+    padding: 0px 8px;
+    display: inline-block;
+}
+
+#login .content a.linkbtn2:hover {
+    background: url(linkbtn2_over.gif) no-repeat left top;
+}
+
+#login .content a.linkbtn2:hover span {
+    background: url(linkbtn2_over.gif) no-repeat right top;
+}
+
+#login .content .inputbtn {
+    width: 54px;
+    height: 23px;
+    background: url(inputbtn.gif) no-repeat center center;
+    line-height: 23px;
+    text-align: center;
+    border: 0px;
+    color: White;
+}
+
+#login .footer {
+    text-align: center;
+    position: absolute;
+    top: 470px;
+    width: 100%;
+}
+
+#login .footer p {
+    padding: 0px;
+    margin: 0px;
+    color: #005495;
+}
+
+#login #extraDiv1 {
+    width: 25px;
+    background: url(sso_extra1.gif) no-repeat center center;
+    height: 34px;
+    position: absolute;
+    left: 220px;
+    top: 400px;
+}
+
+#login #extraDiv2 {
+    width: 217px; /* background:url(sso_extra2.gif) no-repeat center center; */
+    height: 141px;
+    position: absolute;
+    left: 470px;
+    top: 300px;
+}
