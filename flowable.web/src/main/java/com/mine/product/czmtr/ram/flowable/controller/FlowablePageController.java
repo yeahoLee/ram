@@ -197,7 +197,7 @@ public class FlowablePageController {
 			modelMap.addAttribute("read", true);
 		}
 
-		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_DEPT))) {
+		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USER_LOCATION_CHANGE))) {
 			modelMap.addAttribute("read", true);
 		}
 
