@@ -370,6 +370,23 @@ public class FlowableService implements IFlowableService {
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5)))).collect(Collectors.toList());
                     break;
 
+                //借用归还
+                case FlowableInfo.ASSETS_BORROW_RETURN_DEPT:
+                    if (!VGUtility.isEmpty(map)) {
+                        String deptCode2 = map.get("deptCode");
+                        String flag = map.get("flag");
+
+                        if ("true".equals(flag)) {
+                            nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode2.substring(0, 7)))).collect(Collectors.toList());
+                        } else {
+                            nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode2.substring(0, 5)))).collect(Collectors.toList());
+                        }
+                    }
+                    break;
+                case FlowableInfo.ASSETS_BORROW_RETURN_CENTER:
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5)))).collect(Collectors.toList());
+                    break;
+
                 default :
                     if (FlowableInfo.AssignUserProcess.centerDirector.equals(processLink)) {
                         nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode.substring(0, 7)))).collect(Collectors.toList());
@@ -412,17 +429,9 @@ public class FlowableService implements IFlowableService {
                     String deptCode4 = this.getDepartmentId("1", approveCode);
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode4.substring(0, 5))).collect(Collectors.toList());
                     break;
-                case FlowableInfo.AssignUserProcess.returnedDeptMinister:
-                    String deptCode5 = this.getDepartmentId("1", approveCode);
-                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode5.substring(0, 5))).collect(Collectors.toList());
-                    break;
                 case FlowableInfo.AssignUserProcess.returnedCenterAdmin:
                     String deptCode6 = this.getDepartmentId("1", approveCode);
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode6.substring(0, 7))).collect(Collectors.toList());
-                    break;
-                case FlowableInfo.AssignUserProcess.returnedCenterDirector:
-                    String deptCode7 = this.getDepartmentId("1", approveCode);
-                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode7.substring(0, 7))).collect(Collectors.toList());
                     break;
                 default:
                     nextNodeUserDtosResult = nextNodeUserDtos;
@@ -584,7 +593,10 @@ public class FlowableService implements IFlowableService {
             case FlowableInfo.ASSETS_BORROW_CENTER:
                 this.gatewayUtil(jsonMap, 1, flag, isProductive, worksDto);
                 break;
-            case FlowableInfo.ASSETS_BORROW_RETURN:
+            case FlowableInfo.ASSETS_BORROW_RETURN_CENTER:
+                this.gatewayUtil(jsonMap, 2, flag, isProductive, worksDto);
+                break;
+            case FlowableInfo.ASSETS_BORROW_RETURN_DEPT:
                 this.gatewayUtil(jsonMap, 2, flag, isProductive, worksDto);
                 break;
             case FlowableInfo.ASSETS_USER_LOCATION_CHANGE :
@@ -666,21 +678,24 @@ public class FlowableService implements IFlowableService {
                 jsonMap.put(no_productive_asset_admin_line.getKey(), no_productive_asset_admin_line.getValue());
             }
         } else if (type == 2) {
-            if (flag) {
-                FlowableInfo.GatewayEnum center_director_line = FlowableInfo.GatewayEnum.valueOf("CENTER_DIRECTOR_LINE");
-                jsonMap.put(center_director_line.getKey(), center_director_line.getValue());
-            } else {
-                FlowableInfo.GatewayEnum dept_admin_line = FlowableInfo.GatewayEnum.valueOf("DEPT_ADMIN_LINE");
-                jsonMap.put(dept_admin_line.getKey(), dept_admin_line.getValue());
-            }
-
             boolean isCenter = this.isBusinessCenter("1", worksDto.getApprovalNumber());
-            if (!isCenter) {
-                FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_IN_DEPT_MINISTER_LINE");
-                jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
-            } else if (isCenter) {
-                FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_IN_CENTER_ADMIN_LINE");
-                jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+
+            if (flag) {
+                if (!isCenter) {
+                    FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_ASSET_DEPT_ADMIN_LINE");
+                    jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
+                } else if (isCenter) {
+                    FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_ASSET_CENTER_ADMIN_LINE");
+                    jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+                }
+            } else {
+                if (!isCenter) {
+                    FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_DEPT_ADMIN_LINE");
+                    jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
+                } else if (isCenter) {
+                    FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_CENTER_ADMIN_LINE");
+                    jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+                }
             }
 
             //判断是否为生产性
@@ -1344,7 +1359,7 @@ public class FlowableService implements IFlowableService {
                     resultStr = originProcDefKey + "_DEPT";
                 }
                 resultMap.put("processDefKey", resultStr);
-                resultMap.put("type", 1);
+                resultMap.put("type", 3);
                 break;
             default:
                 resultMap.put("processDefKey", originProcDefKey);
@@ -1395,6 +1410,25 @@ public class FlowableService implements IFlowableService {
                     firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.BORROW_IN_CENTER_ADMIN, nextNodeDto, datas, extraMap);
                 } else {
                     firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.BORROW_IN_DEPT_ADMIN, nextNodeDto, datas, extraMap);
+                }
+            }
+        } else if (type == 3) {
+            //借用归还
+            if (flag) {
+                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT_ASSET_ADMIN, nextNodeDto, datas, null);
+            } else {
+                Map<String, String> extraMap = new HashMap<>();
+                String assetrevertUserId = map.get("assetrevertUserId");
+                String assetrevertDepartmentId = map.get("assetrevertDepartmentId");
+                DeptInfoDto deptInfo = userService.getDeptInfo(assetrevertDepartmentId);
+                UserInfoDto userInfo = userService.getUserInfo(assetrevertUserId);
+                boolean flag2 = isCenter(userInfo.getPropertyMap().get("EMP_NO").toString());
+                extraMap.put("deptCode", deptInfo.getDeptCode());
+                extraMap.put("flag", String.valueOf(flag2));
+                if (flag2) {
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.RETURNED_CENTER_ADMIN, nextNodeDto, datas, extraMap);
+                } else {
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.RETURNED_DEPT_ADMIN, nextNodeDto, datas, extraMap);
                 }
             }
         }

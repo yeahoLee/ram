@@ -115,6 +115,11 @@ public class FlowableInfo {
     //借入部门资产管理员
     public static final String BORROW_IN_DEPT_ADMIN = "borrowInDeptAdmin";
 
+    //还入中心固定资产管理员
+    public static final String RETURNED_CENTER_ADMIN = "returnedCenterAdmin";
+    //还入部门资产管理员
+    public static final String RETURNED_DEPT_ADMIN = "returnedDeptAdmin";
+
 
     public static final Map<String, Object> mapService = new HashMap<String, Object>() {
         {
@@ -182,11 +187,13 @@ public class FlowableInfo {
         NO_PRODUCTIVE_ASSET_ADMIN_LINE2("borrowInDeptAdminNextNode", "noProductiveAssetAdmin"),
         PRODUCTIVE_ASSET_ADMIN_LINE2("borrowInDeptAdminNextNode", "productiveAssetAdmin"),
 
-        //借出归还
-        RETURNED_IN_DEPT_MINISTER_LINE("returnedDeptAdminNextNode", "returnedDeptMinister"),
-        RETURNED_IN_CENTER_ADMIN_LINE("returnedDeptAdminNextNode", "returnedCenterAdmin"),
-        NO_PRODUCTIVE_ASSET_ADMIN_LINE3("returnedDeptMinisterNextNode", "noProductiveAssetAdmin"),
-        PRODUCTIVE_ASSET_ADMIN_LINE3("returnedDeptMinisterNextNode", "productiveAssetAdmin"),
+        //借用归还
+        RETURNED_DEPT_ADMIN_LINE("draftNextNode", "returnedDeptAdmin"),
+        RETURNED_CENTER_ADMIN_LINE("draftNextNode", "returnedCenterAdmin"),
+        RETURNED_ASSET_DEPT_ADMIN_LINE("deptAssetAdminNextNode", "returnedDeptAdmin"),
+        RETURNED_ASSET_CENTER_ADMIN_LINE("deptAssetAdminNextNode", "returnedCenterAdmin"),
+        NO_PRODUCTIVE_ASSET_ADMIN_LINE3("returnedDeptAdminNextNode", "noProductiveAssetAdmin"),
+        PRODUCTIVE_ASSET_ADMIN_LINE3("returnedDeptAdminNextNode", "productiveAssetAdmin"),
 
         //领用归还
         NO_PRODUCTIVE_ASSET_ADMIN_LINE4("deptAssetAdminNextNode", "noProductiveAssetAdmin"),
@@ -228,7 +235,8 @@ public class FlowableInfo {
         ASSETS_INVENTORY_RESULT("ASSETS_INVENTORY_RESULT", "固定资产盘点结果流程"),
         FIXED_ASSETS_ARCHIVE_CENTER("FIXED_ASSETS_ARCHIVE_CENTER", "固定资产分寸/启封流程"),
         ASSETS_IMPAIRMENT("ASSETS_IMPAIRMENT", "固定资产减损流程"),
-        ASSETS_BORROW_RETURN("ASSETS_BORROW_RETURN", "固定资产借用归还流程"),
+        ASSETS_BORROW_RETURN_DEPT("ASSETS_BORROW_RETURN_DEPT", "固定资产借用归还流程（部门）"),
+        ASSETS_BORROW_RETURN_CENTER("ASSETS_BORROW_RETURN_CENTER", "固定资产借用归还流程（中心）"),
         ASSETS_BORROW_DEPT("ASSETS_BORROW_DEPT", "固定资产借用流程（部门）"),
         ASSETS_BORROW_CENTER("ASSETS_BORROW_CENTER", "固定资产借用流程（中心）"),
         ASSETS_USE_RETURN_DEPT("ASSETS_USE_RETURN_DEPT", "固定资产领用归还流程（部门）"),
@@ -281,12 +289,8 @@ public class FlowableInfo {
         /*借用归还流程*/
         //还入部门管理员
         public static final String returnedDeptAdmin = "returnedDeptAdmin";
-        //还入部门部长
-        public static final String returnedDeptMinister = "returnedDeptMinister";
         //还入中心固定资产管理员审核
         public static final String returnedCenterAdmin = "returnedCenterAdmin";
-        //还入中心主任
-        public static final String returnedCenterDirector = "returnedCenterDirector";
     }
 
 

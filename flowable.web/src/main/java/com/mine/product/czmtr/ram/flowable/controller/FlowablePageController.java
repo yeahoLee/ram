@@ -197,7 +197,7 @@ public class FlowablePageController {
 			modelMap.addAttribute("read", true);
 		}
 
-		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_DEPT))) {
+		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_RETURN_DEPT))) {
 			modelMap.addAttribute("read", true);
 		}
 
@@ -308,7 +308,7 @@ public class FlowablePageController {
 				}
 				return "flowable/platform/detail/borrowApproveDetail";
 
-			case FlowableInfo.ASSETS_BORROW_RETURN :
+			case FlowableInfo.ASSETS_BORROW_RETURN_CENTER :
 				List<AssetRevertDto> assetRevertDto = (List<AssetRevertDto>) assetRevertService.getAssetRevertDtoByQuerysForDataGrid(new ISearchExpression() {
 					@Override
 					public Object change(Object... arg0) {
@@ -321,6 +321,22 @@ public class FlowablePageController {
 				}, null).get("rows");
 				if (assetRevertDto.size() > 0) {
 					modelMap.put("AssetRevertDto", assetRevertDto.get(0));
+				}
+				return "flowable/platform/detail/revertApproveDetail";
+
+			case FlowableInfo.ASSETS_BORROW_RETURN_DEPT :
+				List<AssetRevertDto> assetRevertDto1 = (List<AssetRevertDto>) assetRevertService.getAssetRevertDtoByQuerysForDataGrid(new ISearchExpression() {
+					@Override
+					public Object change(Object... arg0) {
+						CriteriaBuilder builder = (CriteriaBuilder) arg0[1];
+						Root root = (Root) arg0[0];
+						Predicate finalPred = null;
+						finalPred = builder.equal(root.get("assetrevertCode"), approveCode);
+						return finalPred;
+					}
+				}, null).get("rows");
+				if (assetRevertDto1.size() > 0) {
+					modelMap.put("AssetRevertDto", assetRevertDto1.get(0));
 				}
 				return "flowable/platform/detail/revertApproveDetail";
 
@@ -544,7 +560,7 @@ public class FlowablePageController {
 				}
 				return "flowable/platform/detail/borrowApproveDetail";
 
-			case FlowableInfo.ASSETS_BORROW_RETURN:
+			case FlowableInfo.ASSETS_BORROW_RETURN_CENTER:
 				List<AssetRevertDto> assetRevertDto = (List<AssetRevertDto>) assetRevertService.getAssetRevertDtoByQuerysForDataGrid(new ISearchExpression() {
 					@Override
 					public Object change(Object... arg0) {
@@ -557,6 +573,22 @@ public class FlowablePageController {
 				}, null).get("rows");
 				if (assetRevertDto.size() > 0) {
 					modelMap.put("AssetRevertDto", assetRevertDto.get(0));
+				}
+				return "flowable/platform/detail/revertApproveDetail";
+
+			case FlowableInfo.ASSETS_BORROW_RETURN_DEPT:
+				List<AssetRevertDto> assetRevertDto1 = (List<AssetRevertDto>) assetRevertService.getAssetRevertDtoByQuerysForDataGrid(new ISearchExpression() {
+					@Override
+					public Object change(Object... arg0) {
+						CriteriaBuilder builder = (CriteriaBuilder) arg0[1];
+						Root root = (Root) arg0[0];
+						Predicate finalPred = null;
+						finalPred = builder.equal(root.get("assetrevertCode"), approveCode);
+						return finalPred;
+					}
+				}, null).get("rows");
+				if (assetRevertDto1.size() > 0) {
+					modelMap.put("AssetRevertDto", assetRevertDto1.get(0));
 				}
 				return "flowable/platform/detail/revertApproveDetail";
 

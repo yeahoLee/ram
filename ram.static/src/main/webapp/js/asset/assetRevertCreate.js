@@ -228,6 +228,8 @@ function saveAssetRevertSubmit(type) {
                     data1.processDefKey = ASSETS_BORROW_RETURN;
                     data1.resultLocation = "assetrevert_query";
                     data1.produceType = data.produceTypeStr;
+                    data1.assetrevertDepartmentId = data.assetrevertDepartmentID;
+                    data1.assetrevertUserId = data.assetrevertUserID;
                     getFirstNode(data1);
                 }
             },

@@ -45,6 +45,8 @@ function UpdateAssetRevertStauts(index) {
     data.processDefKey = ASSETS_BORROW_RETURN;
     data.resultLocation = "assetrevert_query";
     data.produceType = row.produceTypeStr;
+    data.assetrevertDepartmentId = row.assetrevertDepartmentID;
+    data.assetrevertUserId = row.assetrevertUserID;
     getFirstNode(data);
 }
 
@@ -135,6 +137,8 @@ $(function () {
             {field: 'assetRevertTempStr', title: '归还资产'},
             {field: 'produceStr', title: '物资类型'},
             {field: 'produceTypeStr', hidden: true},
+            {field: 'assetrevertDepartmentID', hidden: true},
+            {field: 'assetrevertUserID', hidden: true},
             {field: 'receiptStatus', title: '审批状态'},
             {
                 field: 'id', title: '操作', formatter: function (value, row, index) {
