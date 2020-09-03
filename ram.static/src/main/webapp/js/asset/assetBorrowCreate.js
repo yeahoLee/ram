@@ -210,6 +210,8 @@ function saveAssetBorrowSubmit(type) {
                     data1.processDefKey = ASSETS_BORROW;
                     data1.resultLocation = "assetborrow_query";
                     data1.produceType = data.produceTypeStr;
+                    data1.assetborrowUserId = data.assetborrowUserID;
+                    data1.assetborrowDepartmentId = data.assetborrowDepartmentID;
                     getFirstNode(data1);
                 }
             },

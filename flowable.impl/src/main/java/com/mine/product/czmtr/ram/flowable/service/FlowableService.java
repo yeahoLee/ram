@@ -30,6 +30,7 @@ import com.mine.product.flowable.api.service.IApiFlowableProcessDefinitionServic
 import com.mine.product.flowable.api.service.IApiFlowableProcessInstanceService;
 import com.mine.product.flowable.api.service.IApiFlowableTaskService;
 import com.mine.product.flowable.api.service.IApiFlowableWorkDetailService;
+import com.rabbitmq.client.AMQP;
 import com.vgtech.platform.common.utility.MineSecureUtility;
 import com.vgtech.platform.common.utility.SpringSecureUserInfo;
 import com.vgtech.platform.common.utility.VGUtility;
@@ -307,7 +308,7 @@ public class FlowableService implements IFlowableService {
     }
 
     @Override
-    public List<NextNodeUserDto> getProcessUser(String processDefinitionKey, String processLink, WorksDto worksDto) {
+    public List<NextNodeUserDto> getProcessUser(String processDefinitionKey, String processLink, WorksDto worksDto, Map<String, String> map) {
 
         UserInfoDto userInfo = ((SpringSecureUserInfo) MineSecureUtility.currentUser()).getUserInfo();
         UserInfoDto userInfo1 = userService.getUserInfo(userInfo.getId());
@@ -351,12 +352,28 @@ public class FlowableService implements IFlowableService {
                 case FlowableInfo.ASSETS_USE_RETURN_CENTER:
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5)))).collect(Collectors.toList());
                     break;
+
+                //借用
+                case FlowableInfo.ASSETS_BORROW_DEPT:
+                    if (!VGUtility.isEmpty(map)) {
+                        String deptCode2 = map.get("deptCode");
+                        String flag = map.get("flag");
+
+                        if ("true".equals(flag)) {
+                            nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode2.substring(0, 7)))).collect(Collectors.toList());
+                        } else {
+                            nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode2.substring(0, 5)))).collect(Collectors.toList());
+                        }
+                    }
+                    break;
+                case FlowableInfo.ASSETS_BORROW_CENTER:
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5)))).collect(Collectors.toList());
+                    break;
+
                 default :
                     if (FlowableInfo.AssignUserProcess.centerDirector.equals(processLink)) {
-                        //TODO 判断拟稿人和审批用户是否处于一个中心
                         nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode.substring(0, 7)))).collect(Collectors.toList());
                     } else if (FlowableInfo.AssignUserProcess.deptAdmin.equals(processLink)) {
-                        //TODO 判断拟稿人和审批用户是否处于一个部门
                         nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5)))).collect(Collectors.toList());
                     }
                     break;
@@ -373,30 +390,23 @@ public class FlowableService implements IFlowableService {
              */
             switch (processLink) {
                 case FlowableInfo.AssignUserProcess.centerDirector:
-                    //TODO 判断拟稿人和审批用户是否处于一个中心
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> (result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode.substring(0, 7)))).collect(Collectors.toList());
                     break;
                 case FlowableInfo.AssignUserProcess.deptAssetAdmin:
-                    //TODO 判断拟稿人和审批用户是否处于一个部门
                     //result.getDeptCode().length() == 5 &&
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5))).collect(Collectors.toList());
                     break;
                 case FlowableInfo.AssignUserProcess.deptAdmin:
-                    //TODO 判断拟稿人和审批用户是否处于一个部门
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode.substring(0, 5))).collect(Collectors.toList());
                     break;
-                case FlowableInfo.AssignUserProcess.borrowOutDeptAdmin:
+                case FlowableInfo.AssignUserProcess.borrowInDeptAdmin:
                     String deptCode1 = this.getDepartmentId("0", approveCode);
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode1.substring(0, 5))).collect(Collectors.toList());
                     break;
-                case FlowableInfo.AssignUserProcess.borrowOutCenterAdmin:
+                case FlowableInfo.AssignUserProcess.borrowInCenterAdmin:
                     String deptCode2 = this.getDepartmentId("0", approveCode);
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode2.substring(0, 7))).collect(Collectors.toList());
 
-                    break;
-                case FlowableInfo.AssignUserProcess.borrowOutCenterDirector:
-                    String deptCode3 = this.getDepartmentId("0", approveCode);
-                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode3.substring(0, 7))).collect(Collectors.toList());
                     break;
                 case FlowableInfo.AssignUserProcess.returnedDeptAdmin:
                     String deptCode4 = this.getDepartmentId("1", approveCode);
@@ -565,10 +575,13 @@ public class FlowableService implements IFlowableService {
             case FlowableInfo.ASSETS_USE_RETURN_CENTER:
                 this.gatewayUtil(jsonMap, 3, flag, isProductive, worksDto);
                 break;
-            case FlowableInfo.ASSETS_USE:
-                this.gatewayUtil(jsonMap, 0, flag, isProductive, worksDto);
+            //case FlowableInfo.ASSETS_USE:
+            //    this.gatewayUtil(jsonMap, 0, flag, isProductive, worksDto);
+            //    break;
+            case FlowableInfo.ASSETS_BORROW_DEPT:
+                this.gatewayUtil(jsonMap, 1, flag, isProductive, worksDto);
                 break;
-            case FlowableInfo.ASSETS_BORROW:
+            case FlowableInfo.ASSETS_BORROW_CENTER:
                 this.gatewayUtil(jsonMap, 1, flag, isProductive, worksDto);
                 break;
             case FlowableInfo.ASSETS_BORROW_RETURN:
@@ -625,21 +638,23 @@ public class FlowableService implements IFlowableService {
                 jsonMap.put(no_productive_asset_admin_line.getKey(), no_productive_asset_admin_line.getValue());
             }
         } else if (type == 1) {
-            if (flag) {
-                FlowableInfo.GatewayEnum center_director_line = FlowableInfo.GatewayEnum.valueOf("CENTER_DIRECTOR_LINE");
-                jsonMap.put(center_director_line.getKey(), center_director_line.getValue());
-            } else {
-                FlowableInfo.GatewayEnum dept_admin_line = FlowableInfo.GatewayEnum.valueOf("DEPT_ADMIN_LINE");
-                jsonMap.put(dept_admin_line.getKey(), dept_admin_line.getValue());
-            }
-
             boolean isCenter = this.isBusinessCenter("0", worksDto.getApprovalNumber());
-            if (!isCenter) {
-                FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_OUT_DEPT_MINISTER_LINE");
-                jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
-            } else if (isCenter) {
-                FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RETURNED_OUT_CENTER_ADMIN_LINE");
-                jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+            if (flag) {
+                if (!isCenter) {
+                    FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("BORROW_ASSET_DEPT_ADMIN_LINE");
+                    jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
+                } else if (isCenter) {
+                    FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RBORROW_ASSET_CENTER_ADMIN_LINE");
+                    jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+                }
+            } else {
+                if (!isCenter) {
+                    FlowableInfo.GatewayEnum returned_dept_minister_line = FlowableInfo.GatewayEnum.valueOf("BORROW_DEPT_ADMIN_LINE");
+                    jsonMap.put(returned_dept_minister_line.getKey(), returned_dept_minister_line.getValue());
+                } else if (isCenter) {
+                    FlowableInfo.GatewayEnum returned_center_admin_line = FlowableInfo.GatewayEnum.valueOf("RBORROW_CENTER_ADMIN_LINE");
+                    jsonMap.put(returned_center_admin_line.getKey(), returned_center_admin_line.getValue());
+                }
             }
 
             //判断是否为生产性
@@ -1123,12 +1138,12 @@ public class FlowableService implements IFlowableService {
 
             Map<String, List<String>> nodeAndUserMap = new HashMap<>();
 
-            if(!VGUtility.isEmpty(params)) {
+            if (!VGUtility.isEmpty(params)) {
                 // 2.2解析前端传入参数 格式：huanjie1_user1;huanjie1_user2;huanjie3_user3
                 String[] nodeAndUserArray = params.split(";");
                 for (int i = 0; i < nodeAndUserArray.length; i++) {
                     String[] nodeAndUser = nodeAndUserArray[i].split("_");
-                    if(null != nodeAndUserMap.get(nodeAndUser[0])) {
+                    if (null != nodeAndUserMap.get(nodeAndUser[0])) {
                         // 2.2.1缓存中存在环节和用户，添加在list中
                         nodeAndUserMap.get(nodeAndUser[0]).add(nodeAndUser[1]);
                     } else {
@@ -1166,6 +1181,8 @@ public class FlowableService implements IFlowableService {
             } else {
                 worksDto.setWorkStatus(FlowableInfo.WORKSTATUS.审批中);
             }
+
+
             worksDto.setProcessInstanceId(processInstanceId);
             worksDto.setStarterId(userInfo1.getPropertyMap().get("EMP_NO").toString());
             if (!VGUtility.isEmpty(publicUse)) {
@@ -1246,9 +1263,8 @@ public class FlowableService implements IFlowableService {
         Map<String, Object> baseInfo = putBaseInfo(map.get("processDefKey"), userInfo1.getPropertyMap().get("EMP_NO").toString());
         String businessKey = map.get("id");
         String processDefinitionKey = baseInfo.get("processDefKey").toString();
+        map.put("processDefKey", processDefinitionKey);
         String publicUse = map.get("publicUse");
-        String produceType = map.get("produceType");
-
 
 
         //判断业务资产是否可用
@@ -1289,7 +1305,7 @@ public class FlowableService implements IFlowableService {
         ReturnVo<FlowNodeVo> asset_add = iApiFlowableProcessDefinitionService.getUserTaskByProcessDefinitionKey(processDefinitionKey);
         List<FlowNodeVo> datas = asset_add.getDatas();
 
-        getFirstNodeUser((Boolean)baseInfo.get("flag"), processDefinitionKey, nextNodeDto, datas, produceType, (Integer)baseInfo.get("type"));
+        getFirstNodeUser((Boolean)baseInfo.get("flag"), nextNodeDto, datas, map, (Integer)baseInfo.get("type"));
         nextNodeDtos.add(nextNodeDto);
         return nextNodeDtos;
     }
@@ -1300,10 +1316,28 @@ public class FlowableService implements IFlowableService {
         Map<String, Object> resultMap = new HashMap<>(5);
 
         boolean flag = this.isCenter(empNo);
+        String resultStr = "";
 
         switch (originProcDefKey) {
             case FlowableInfo.ASSETS_USE_RETURN :
-                String resultStr = "";
+                if (flag) {
+                    resultStr = originProcDefKey + "_CENTER";
+                } else {
+                    resultStr = originProcDefKey + "_DEPT";
+                }
+                resultMap.put("processDefKey", resultStr);
+                resultMap.put("type", 1);
+                break;
+            case FlowableInfo.ASSETS_BORROW :
+                if (flag) {
+                    resultStr = originProcDefKey + "_CENTER";
+                } else {
+                    resultStr = originProcDefKey + "_DEPT";
+                }
+                resultMap.put("processDefKey", resultStr);
+                resultMap.put("type", 2);
+                break;
+            case FlowableInfo.ASSETS_BORROW_RETURN :
                 if (flag) {
                     resultStr = originProcDefKey + "_CENTER";
                 } else {
@@ -1322,32 +1356,47 @@ public class FlowableService implements IFlowableService {
         return resultMap;
     }
 
-    private void getFirstNodeUser(boolean flag, String processDefinitionKey, NextNodeDto nextNodeDto, List<FlowNodeVo> datas, String produceType, int type) {
-
+    private void getFirstNodeUser(boolean flag, NextNodeDto nextNodeDto, List<FlowNodeVo> datas, Map<String, String> map, int type) {
+        String processDefinitionKey = map.get("processDefKey");
         List<NextNodeUserDto> firstUser = null;
         if (type== 0) {
             //默认
             if (flag) {
-                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_CENTER, nextNodeDto, datas);
+                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_CENTER, nextNodeDto, datas, null);
             } else {
-                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT, nextNodeDto, datas);
-
+                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT, nextNodeDto, datas, null);
             }
         } else if (type == 1) {
             //领用归还
-            IAssetService.ASSET_PRODUCE_TYPE value = IAssetService.ASSET_PRODUCE_TYPE.values()[Integer.valueOf(produceType)];
+            IAssetService.ASSET_PRODUCE_TYPE value = IAssetService.ASSET_PRODUCE_TYPE.values()[Integer.valueOf(map.get("produceType"))];
             if (flag) {
-                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT_ASSET_ADMIN, nextNodeDto, datas);
+                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT_ASSET_ADMIN, nextNodeDto, datas, null);
             } else {
                 if (IAssetService.ASSET_PRODUCE_TYPE.生产性物资.equals(value)) {
-                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN, nextNodeDto, datas);
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN, nextNodeDto, datas, null);
                 } else {
-                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN, nextNodeDto, datas);
-
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN, nextNodeDto, datas, null);
                 }
             }
-
-
+        } else if (type == 2) {
+            //借用
+            if (flag) {
+                firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.PROCESS_DEPT_ASSET_ADMIN, nextNodeDto, datas, null);
+            } else {
+                Map<String, String> extraMap = new HashMap<>();
+                String assetborrowUserId = map.get("assetborrowUserId");
+                String assetborrowDepartmentId = map.get("assetborrowDepartmentId");
+                DeptInfoDto deptInfo = userService.getDeptInfo(assetborrowDepartmentId);
+                UserInfoDto userInfo = userService.getUserInfo(assetborrowUserId);
+                boolean flag2 = isCenter(userInfo.getPropertyMap().get("EMP_NO").toString());
+                extraMap.put("deptCode", deptInfo.getDeptCode());
+                extraMap.put("flag", String.valueOf(flag2));
+                if (flag2) {
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.BORROW_IN_CENTER_ADMIN, nextNodeDto, datas, extraMap);
+                } else {
+                    firstUser = getFirstUserCommon(processDefinitionKey, FlowableInfo.BORROW_IN_DEPT_ADMIN, nextNodeDto, datas, extraMap);
+                }
+            }
         }
         nextNodeDto.setUsers(firstUser);
     }
@@ -1360,8 +1409,8 @@ public class FlowableService implements IFlowableService {
      * @param datas
      * @return
      */
-    private List<NextNodeUserDto> getFirstUserCommon(String processDefinitionKey, String process, NextNodeDto nextNodeDto, List<FlowNodeVo> datas) {
-        List<NextNodeUserDto> processUser  = this.getProcessUser(processDefinitionKey, process, null);
+    private List<NextNodeUserDto> getFirstUserCommon(String processDefinitionKey, String process, NextNodeDto nextNodeDto, List<FlowNodeVo> datas,  Map<String, String> map) {
+        List<NextNodeUserDto> processUser  = this.getProcessUser(processDefinitionKey, process, null, map);
         nextNodeDto.setNodeId(process);
         for (FlowNodeVo flowNodeVo : datas) {
             if (process.equals(flowNodeVo.getNodeId())) {
@@ -1412,7 +1461,7 @@ public class FlowableService implements IFlowableService {
                                 dto.setNodeId(flowNodeVo.getNodeId());
                                 dto.setNodeName(flowNodeVo.getNodeName());
                                 // 根据流程角色获取用户
-                                List<NextNodeUserDto> processUser = this.getProcessUser(processDefinitionKey, flowNodeVo.getNodeId(), worksModelByBusinessKey);
+                                List<NextNodeUserDto> processUser = this.getProcessUser(processDefinitionKey, flowNodeVo.getNodeId(), worksModelByBusinessKey, null);
                                 dto.setUsers(processUser);
                                 nextNodeDtos.add(dto);
                             }
@@ -1428,7 +1477,7 @@ public class FlowableService implements IFlowableService {
                     dto.setNodeId(datas.get(0).getNodeId());
                     dto.setNodeName(datas.get(0).getNodeName());
                     // 根据流程角色获取用户
-                    List<NextNodeUserDto> processUser = this.getProcessUser(processDefinitionKey, datas.get(0).getNodeId(), worksModelByBusinessKey);
+                    List<NextNodeUserDto> processUser = this.getProcessUser(processDefinitionKey, datas.get(0).getNodeId(), worksModelByBusinessKey, null);
                     dto.setUsers(processUser);
                     nextNodeDtos.add(dto);
                 }

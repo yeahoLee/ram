@@ -146,7 +146,15 @@ public interface IFlowableService {
      */
     WorkFlowProcessDto getGroupIdByProcessKey(String flowId, String processKey);
 
-    List<NextNodeUserDto> getProcessUser(String processDefinitionKey, String processLink, WorksDto worksDto);
+    /**
+     * 获取环节人员
+     * @param processDefinitionKey
+     * @param processLink
+     * @param worksDto
+     * @param map
+     * @return
+     */
+    List<NextNodeUserDto> getProcessUser(String processDefinitionKey, String processLink, WorksDto worksDto, Map<String, String> map);
 
     boolean isCenter(String userCode);
 

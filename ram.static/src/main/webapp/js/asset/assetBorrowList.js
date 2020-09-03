@@ -45,6 +45,9 @@ function UpdateAssetBorrowStauts(index) {
     data.processDefKey = ASSETS_BORROW;
     data.resultLocation = "assetborrow_query";
     data.produceType = row.produceTypeStr;
+    data.assetborrowUserId = row.assetborrowUserID;
+    data.assetborrowDepartmentId = row.assetborrowDepartmentID;
+
     getFirstNode(data);
 }
 
@@ -131,6 +134,8 @@ $(function () {
             },
             {field: 'assetborrowDepartmentName', title: '借用部门'},
             {field: 'assetborrowUserName', title: '借用人'},
+            {field: 'assetborrowUserID', hidden:true},
+            {field: 'assetborrowDepartmentID', hidden:true},
             {field: 'createTimestamp', title: '借用日期'},
             {field: 'revertTimeStr', title: '预计归还日期'},
             {field: 'assetBorrowTempStr', title: '借用资产'},

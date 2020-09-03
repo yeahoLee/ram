@@ -197,7 +197,7 @@ public class FlowablePageController {
 			modelMap.addAttribute("read", true);
 		}
 
-		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE))) {
+		if ((Objects.equals(nodeId, FlowableInfo.PROCESS_PRODUCTIVE_ASSET_ADMIN) || Objects.equals(nodeId, FlowableInfo.PROCESS_NO_PRODUCTIVE_ASSET_ADMIN)) && (processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_USE_RETURN_DEPT) || processDefkey.equals(FlowableInfo.ASSETS_USE) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_CENTER) || processDefkey.equals(FlowableInfo.ASSETS_BORROW_DEPT))) {
 			modelMap.addAttribute("read", true);
 		}
 
@@ -266,7 +266,7 @@ public class FlowablePageController {
 				}
 				return "flowable/platform/detail/receiveUseApproveDetail";
 
-			case FlowableInfo.ASSETS_BORROW :
+			case FlowableInfo.ASSETS_BORROW_DEPT :
 				List<AssetBorrowDto> assetBorrowDto = (List<AssetBorrowDto>) assetBorrowService.getAssetBorrowDtoByQuerysForDataGrid(new ISearchExpression() {
 					@Override
 					public Object change(Object... arg0) {
@@ -280,6 +280,27 @@ public class FlowablePageController {
 				}, null).get("rows");
 				if (assetBorrowDto.size() > 0) {
 					AssetBorrowDto assetBorrow = assetBorrowDto.get(0);
+					assetBorrow.setAssetborrowUserName(userService.getUserInfo(assetBorrow.getAssetborrowUserID()).getChsName());
+					assetBorrow.setAssetborrowDepartmentName(userService.getDeptInfo(assetBorrow.getAssetborrowDepartmentID()).getDeptName());
+					assetBorrow.setCreateUserName(userService.getUserInfo(assetBorrow.getCreateUserID()).getChsName());
+					modelMap.addAttribute("AssetBorrowDto", assetBorrow);
+				}
+				return "flowable/platform/detail/borrowApproveDetail";
+
+			case FlowableInfo.ASSETS_BORROW_CENTER :
+				List<AssetBorrowDto> assetBorrowDto1 = (List<AssetBorrowDto>) assetBorrowService.getAssetBorrowDtoByQuerysForDataGrid(new ISearchExpression() {
+					@Override
+					public Object change(Object... arg0) {
+						CriteriaBuilder builder = (CriteriaBuilder) arg0[1];
+						Root root = (Root) arg0[0];
+						Predicate finalPred = null;
+						finalPred = builder.equal(root.get("assetborrowCode"), approveCode);
+
+						return finalPred;
+					}
+				}, null).get("rows");
+				if (assetBorrowDto1.size() > 0) {
+					AssetBorrowDto assetBorrow = assetBorrowDto1.get(0);
 					assetBorrow.setAssetborrowUserName(userService.getUserInfo(assetBorrow.getAssetborrowUserID()).getChsName());
 					assetBorrow.setAssetborrowDepartmentName(userService.getDeptInfo(assetBorrow.getAssetborrowDepartmentID()).getDeptName());
 					assetBorrow.setCreateUserName(userService.getUserInfo(assetBorrow.getCreateUserID()).getChsName());
@@ -481,7 +502,7 @@ public class FlowablePageController {
 				}
 				return "flowable/platform/detail/receiveUseApproveDetail";
 
-			case FlowableInfo.ASSETS_BORROW:
+			case FlowableInfo.ASSETS_BORROW_DEPT:
 				List<AssetBorrowDto> assetBorrowDto = (List<AssetBorrowDto>) assetBorrowService.getAssetBorrowDtoByQuerysForDataGrid(new ISearchExpression() {
 					@Override
 					public Object change(Object... arg0) {
@@ -495,6 +516,27 @@ public class FlowablePageController {
 				}, null).get("rows");
 				if (assetBorrowDto.size() > 0) {
 					AssetBorrowDto assetBorrow = assetBorrowDto.get(0);
+					assetBorrow.setAssetborrowUserName(userService.getUserInfo(assetBorrow.getAssetborrowUserID()).getChsName());
+					assetBorrow.setAssetborrowDepartmentName(userService.getDeptInfo(assetBorrow.getAssetborrowDepartmentID()).getDeptName());
+					assetBorrow.setCreateUserName(userService.getUserInfo(assetBorrow.getCreateUserID()).getChsName());
+					modelMap.addAttribute("AssetBorrowDto", assetBorrow);
+				}
+				return "flowable/platform/detail/borrowApproveDetail";
+
+			case FlowableInfo.ASSETS_BORROW_CENTER:
+				List<AssetBorrowDto> assetBorrowDto1 = (List<AssetBorrowDto>) assetBorrowService.getAssetBorrowDtoByQuerysForDataGrid(new ISearchExpression() {
+					@Override
+					public Object change(Object... arg0) {
+						CriteriaBuilder builder = (CriteriaBuilder) arg0[1];
+						Root root = (Root) arg0[0];
+						Predicate finalPred = null;
+						finalPred = builder.equal(root.get("assetborrowCode"), approveCode);
+
+						return finalPred;
+					}
+				}, null).get("rows");
+				if (assetBorrowDto1.size() > 0) {
+					AssetBorrowDto assetBorrow = assetBorrowDto1.get(0);
 					assetBorrow.setAssetborrowUserName(userService.getUserInfo(assetBorrow.getAssetborrowUserID()).getChsName());
 					assetBorrow.setAssetborrowDepartmentName(userService.getDeptInfo(assetBorrow.getAssetborrowDepartmentID()).getDeptName());
 					assetBorrow.setCreateUserName(userService.getUserInfo(assetBorrow.getCreateUserID()).getChsName());

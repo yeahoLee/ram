@@ -62,6 +62,8 @@ public class FlowableInfo {
      * 固定资产借用归还流程
      */
     public static final String ASSETS_BORROW_RETURN = "ASSETS_BORROW_RETURN";
+    public static final String ASSETS_BORROW_RETURN_DEPT = "ASSETS_BORROW_RETURN_DEPT";
+    public static final String ASSETS_BORROW_RETURN_CENTER = "ASSETS_BORROW_RETURN_CENTER";
 
     /**
      * 固定资产新增流程
@@ -72,6 +74,8 @@ public class FlowableInfo {
      * 固定资产借用流程
      */
     public static final String ASSETS_BORROW = "ASSETS_BORROW";
+    public static final String ASSETS_BORROW_DEPT = "ASSETS_BORROW_DEPT";
+    public static final String ASSETS_BORROW_CENTER = "ASSETS_BORROW_CENTER";
 
     /**
      * 部门资产管理员（审批判断）
@@ -106,15 +110,22 @@ public class FlowableInfo {
     //财务告知
     public static final String FINANCE_DEPT_MANAGER_2 = "financeDeptManager2";
 
+    //借入中心固定资产管理员
+    public static final String BORROW_IN_CENTER_ADMIN = "borrowInCenterAdmin";
+    //借入部门资产管理员
+    public static final String BORROW_IN_DEPT_ADMIN = "borrowInDeptAdmin";
+
 
     public static final Map<String, Object> mapService = new HashMap<String, Object>() {
         {
             //调拨
             put(ASSETS_TRANSFER, "assetAllocationService");
             //借用
-            put(ASSETS_BORROW, "assetBorrowService");
+            put(ASSETS_BORROW_DEPT, "assetBorrowService");
+            put(ASSETS_BORROW_CENTER, "assetBorrowService");
             //借用归还
-            put(ASSETS_BORROW_RETURN, "assetRevertService");
+            put(ASSETS_BORROW_RETURN_DEPT, "assetRevertService");
+            put(ASSETS_BORROW_RETURN_CENTER, "assetRevertService");
             //领用
             put(ASSETS_USE, "assetReceiveUseService");
             //领用归还
@@ -163,11 +174,13 @@ public class FlowableInfo {
         PRODUCTIVE_ASSET_ADMIN_LINE("deptAdminNextNode", "productiveAssetAdmin"),
         NO_PRODUCTIVE_ASSET_ADMIN_LINE("deptAdminNextNode", "noProductiveAssetAdmin"),
 
-        //借出流程
-        RETURNED_OUT_DEPT_MINISTER_LINE("deptAdminNextNode", "borrowOutDeptAdmin"),
-        RETURNED_OUT_CENTER_ADMIN_LINE("deptAdminNextNode", "borrowOutCenterAdmin"),
-        NO_PRODUCTIVE_ASSET_ADMIN_LINE2("borrowOutDeptAdminNextNode", "noProductiveAssetAdmin"),
-        PRODUCTIVE_ASSET_ADMIN_LINE2("borrowOutDeptAdminNextNode", "productiveAssetAdmin"),
+        //借用流程
+        BORROW_DEPT_ADMIN_LINE("draftNextNode", "borrowInDeptAdmin"),
+        RBORROW_CENTER_ADMIN_LINE("draftNextNode", "borrowInCenterAdmin"),
+        BORROW_ASSET_DEPT_ADMIN_LINE("deptAssetAdminNextNode", "borrowInDeptAdmin"),
+        RBORROW_ASSET_CENTER_ADMIN_LINE("deptAssetAdminNextNode", "borrowInCenterAdmin"),
+        NO_PRODUCTIVE_ASSET_ADMIN_LINE2("borrowInDeptAdminNextNode", "noProductiveAssetAdmin"),
+        PRODUCTIVE_ASSET_ADMIN_LINE2("borrowInDeptAdminNextNode", "productiveAssetAdmin"),
 
         //借出归还
         RETURNED_IN_DEPT_MINISTER_LINE("returnedDeptAdminNextNode", "returnedDeptMinister"),
@@ -216,7 +229,8 @@ public class FlowableInfo {
         FIXED_ASSETS_ARCHIVE_CENTER("FIXED_ASSETS_ARCHIVE_CENTER", "固定资产分寸/启封流程"),
         ASSETS_IMPAIRMENT("ASSETS_IMPAIRMENT", "固定资产减损流程"),
         ASSETS_BORROW_RETURN("ASSETS_BORROW_RETURN", "固定资产借用归还流程"),
-        ASSETS_BORROW("ASSETS_BORROW", "固定资产借用流程"),
+        ASSETS_BORROW_DEPT("ASSETS_BORROW_DEPT", "固定资产借用流程（部门）"),
+        ASSETS_BORROW_CENTER("ASSETS_BORROW_CENTER", "固定资产借用流程（中心）"),
         ASSETS_USE_RETURN_DEPT("ASSETS_USE_RETURN_DEPT", "固定资产领用归还流程（部门）"),
         ASSETS_USE_RETURN_CENTER("ASSETS_USE_RETURN_CENTER", "固定资产领用归还流程（中心）"),
         ASSETS_INVENTORY_TASK("ASSETS_INVENTORY_TASK", "固定资产盘点任务流程")
@@ -259,12 +273,10 @@ public class FlowableInfo {
         public static final String deptAdmin = "deptAdmin";
 
         /*借用流程*/
-        //借出部门部长审核
-        public static final String borrowOutDeptAdmin = "borrowOutDeptAdmin";
-        //借出中心固定资产管理员审核
-        public static final String borrowOutCenterAdmin = "borrowOutCenterAdmin";
-        //借出中心主任审核
-        public static final String borrowOutCenterDirector = "borrowOutCenterDirector";
+        //借入部门管理员
+        public static final String borrowInDeptAdmin = "borrowInDeptAdmin";
+        //借入中心固定资产管理员审核
+        public static final String borrowInCenterAdmin = "borrowInCenterAdmin";
 
         /*借用归还流程*/
         //还入部门管理员
