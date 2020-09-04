@@ -10,10 +10,7 @@ import com.mine.platform.common.dto.CommonComboDto;
 import com.mine.platform.common.dto.PageDto;
 import com.mine.platform.common.util.ISearchExpression;
 import com.mine.product.czmtr.ram.asset.dto.*;
-import com.mine.product.czmtr.ram.asset.service.IApproveNotify;
-import com.mine.product.czmtr.ram.asset.service.IAssetBorrowService;
-import com.mine.product.czmtr.ram.asset.service.IAssetRevertService;
-import com.mine.product.czmtr.ram.asset.service.IAssetService;
+import com.mine.product.czmtr.ram.asset.service.*;
 import com.mine.product.czmtr.ram.base.service.IBaseService;
 import com.mine.product.czmtr.ram.base.utils.SpringContextUtil;
 import com.mine.product.czmtr.ram.flowable.dao.*;
@@ -43,6 +40,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.x509.CertAttrSet;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -102,6 +100,9 @@ public class FlowableService implements IFlowableService {
 
     @Autowired
     private MessageSendDao messageSendDao;
+
+    @Autowired
+    private IAssetAllocationService assetAllocationService;
 
     /**
      * 常州测试消息来源系统编码
@@ -433,6 +434,24 @@ public class FlowableService implements IFlowableService {
                     String deptCode6 = this.getDepartmentId("1", approveCode);
                     nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode6.substring(0, 7))).collect(Collectors.toList());
                     break;
+
+                //调拨
+                case FlowableInfo.TRANSFER_IN_DEPT_ADMIN:
+                    String deptCode7 = this.getDepartmentId("2", approveCode);
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode7.substring(0, 5))).collect(Collectors.toList());
+                    break;
+                case FlowableInfo.TRANSFER_IN_MINISTER:
+                    String deptCode8 = this.getDepartmentId("2", approveCode);
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().substring(0, 5).equals(deptCode8.substring(0, 5))).collect(Collectors.toList());
+                    break;
+                case FlowableInfo.TRANSFER_IN_CENTER_ADMIN:
+                    String deptCode9 = this.getDepartmentId("2", approveCode);
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode9.substring(0, 7))).collect(Collectors.toList());
+                    break;
+                case FlowableInfo.TRANSFER_IN_CENTER_DIRECTOR:
+                    String deptCode10 = this.getDepartmentId("2", approveCode);
+                    nextNodeUserDtosResult = nextNodeUserDtos.stream().filter(result -> result.getDeptCode().length() >= 7 && result.getDeptCode().substring(0, 7).equals(deptCode10.substring(0, 7))).collect(Collectors.toList());
+                    break;
                 default:
                     nextNodeUserDtosResult = nextNodeUserDtos;
                     break;
@@ -442,7 +461,7 @@ public class FlowableService implements IFlowableService {
     }
 
     private boolean isBusinessCenter(String type, String approveCode) {
-        //0为借用工单查询，1为借用归还工单查询
+        //0为借用工单查询，1为借用归还工单查询, 2为调拨工单查询
         if ("0".equals(type)) {
             List<AssetBorrowDto> assetBorrowDto = (List<AssetBorrowDto>) assetBorrowService.getAssetBorrowDtoByQuerysForDataGrid(new ISearchExpression() {
                 @Override
@@ -479,6 +498,11 @@ public class FlowableService implements IFlowableService {
                 UserInfoDto userInfo = userService.getUserInfo(assetRevertUserID);
                 return this.isCenter(userInfo.getPropertyMap().get("EMP_NO").toString());
             }
+        } else if ("2".equals(type)) {
+            AssetAllocationDto assetAllocationDtoById = assetAllocationService.getAssetAllocationDtoByCode(approveCode);
+            String callInAssetManagerId = assetAllocationDtoById.getCallInAssetManagerId();
+            UserInfoDto userInfo = userService.getUserInfo(callInAssetManagerId);
+            return this.isCenter(userInfo.getPropertyMap().get("EMP_NO").toString());
         }
         return false;
     }
@@ -522,6 +546,13 @@ public class FlowableService implements IFlowableService {
                 DeptInfoDto deptInfo = userService.getDeptInfo(deptId);
                 return deptInfo.getDeptCode();
             }
+        } else if ("2".equals(type)) {
+            AssetAllocationDto assetAllocationDtoByCode = assetAllocationService.getAssetAllocationDtoByCode(approveCode);
+            //调入部门
+            String deptId = assetAllocationDtoByCode.getCallInDepartmentId();
+            DeptInfoDto deptInfo = userService.getDeptInfo(deptId);
+            return deptInfo.getDeptCode();
+
         }
         return "";
     }
@@ -575,7 +606,7 @@ public class FlowableService implements IFlowableService {
                 this.gatewayUtil(jsonMap, 0, flag, isProductive, worksDto);
                 break;
             case FlowableInfo.ASSETS_TRANSFER:
-                this.gatewayUtil(jsonMap, 0, flag, isProductive, worksDto);
+                this.gatewayUtil(jsonMap, 4, flag, isProductive, worksDto);
                 break;
             //领用归还
             case FlowableInfo.ASSETS_USE_RETURN_DEPT:
@@ -632,7 +663,7 @@ public class FlowableService implements IFlowableService {
     }
 
     private void gatewayUtil(Map<String, String> jsonMap, int type, boolean flag, boolean isProductive, WorksDto worksDto) {
-        //0:默认流程，1：借用流程,2:借用归还流程
+        //0:默认流程，1：借用流程,2:借用归还流程,3：领用归还，4：调拨
         if (type == 0) {
             if (flag) {
                 FlowableInfo.GatewayEnum center_director_line = FlowableInfo.GatewayEnum.valueOf("CENTER_DIRECTOR_LINE");
@@ -724,8 +755,32 @@ public class FlowableService implements IFlowableService {
                     jsonMap.put(no_productive_asset_admin_line.getKey(), no_productive_asset_admin_line.getValue());
                 }
             }
-                //判断是否为生产性
+        } else if (type == 4) {
+            if (flag) {
+                FlowableInfo.GatewayEnum center_director_line = FlowableInfo.GatewayEnum.valueOf("CENTER_DIRECTOR_LINE");
+                jsonMap.put(center_director_line.getKey(), center_director_line.getValue());
+            } else {
+                FlowableInfo.GatewayEnum dept_admin_line = FlowableInfo.GatewayEnum.valueOf("DEPT_ADMIN_LINE");
+                jsonMap.put(dept_admin_line.getKey(), dept_admin_line.getValue());
+            }
 
+            boolean isCenter = this.isBusinessCenter("2", worksDto.getApprovalNumber());
+            if (isCenter) {
+                FlowableInfo.GatewayEnum transfer_in_center_line = FlowableInfo.GatewayEnum.valueOf("TRANSFER_IN_CENTER_LINE");
+                jsonMap.put(transfer_in_center_line.getKey(), transfer_in_center_line.getValue());
+            } else {
+                FlowableInfo.GatewayEnum transfer_in_dept_line = FlowableInfo.GatewayEnum.valueOf("TRANSFER_IN_DEPT_LINE");
+                jsonMap.put(transfer_in_dept_line.getKey(), transfer_in_dept_line.getValue());
+            }
+
+            //判断是否为生产性
+            if (isProductive) {
+                FlowableInfo.GatewayEnum productive_asset_admin_line = FlowableInfo.GatewayEnum.valueOf("PRODUCTIVE_TRANSFER_LINE");
+                jsonMap.put(productive_asset_admin_line.getKey(), productive_asset_admin_line.getValue());
+            } else {
+                FlowableInfo.GatewayEnum no_productive_asset_admin_line = FlowableInfo.GatewayEnum.valueOf("NO_PRODUCTIVE_TRANSFER_LINE");
+                jsonMap.put(no_productive_asset_admin_line.getKey(), no_productive_asset_admin_line.getValue());
+            }
         }
     }
 

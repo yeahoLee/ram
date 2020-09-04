@@ -52,7 +52,7 @@
                 <td class="background_color">发起人</td>
                 <td class="td" style="width: 10%;">${assetInventoryDto.createrName }</td>
                 <td class="background_color">盘点状态</td>
-                <td class="td" style="width: 10%;">${assetInventoryDto.inventoryStatusStr }</td>
+                <td class="td" style="width: 10%;">${assetInventoryDto.inventoryStatus }</td>
             </tr>
             <tr style="height: 80px;">
                 <td class="background_color">盘点任务名称</td>
@@ -61,8 +61,8 @@
                 <td class="td" style="width: 10%;">
                     <fmt:formatNumber type="number" value="${assetInventoryDto.quantity }" maxFractionDigits="0"/>
                 </td>
-                <td class="background_color"></td>
-                <td></td>
+                <td class="background_color">物资的类型</td>
+                <td>${assetInventoryDto.produceStr }</td>
             </tr>
             <tr style="height: 80px;">
                 <td class="background_color">盘点任务说明</td>
@@ -70,13 +70,36 @@
             </tr>
         </table>
     </div>
-
+    <c:if test="${assetInventoryDto.inventoryStatusStr eq 3}">
     <div id="assetList" style="margin-top: 5px;">
         <span class="span-title">盘点单</span>
         <hr class="hr-css"/>
         <div class="container-fluid">
             <div style="margin-top: 5px;">
                 <table id="myAssetInventoryDataGrid"></table>
+            </div>
+        </div>
+    </div>
+    </c:if>
+    <br/>
+    <br/>
+    <div id="assetScopeList" style="">
+        <span class="span-title">添加盘点范围</span> （若未指定盘点范围同时未附加盘点资产，系统默认盘点当前物资类型下的全部资产,并将其显示在附加资产清单中）
+        <hr class="hr-css"/>
+        <div class="container-fluid">
+            <div style="margin-top:5px;height:auto;">
+                <table id="assetInventoryScope"></table>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <div id="assetLists" style="">
+        <span class="span-title">附加盘点资产清单</span>
+        <hr class="hr-css"/>
+        <div class="container-fluid">
+            <div style="margin-top: 5px;">
+                <table id="assetInventoryDataGrid"></table>
             </div>
         </div>
     </div>

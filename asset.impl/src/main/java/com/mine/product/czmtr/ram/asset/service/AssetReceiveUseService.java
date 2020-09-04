@@ -17,6 +17,7 @@ import com.mine.product.czmtr.ram.asset.model.AssetReceiveUseTempModel;
 import com.mine.product.czmtr.ram.asset.service.IAssetService.ASSET_STATUS;
 import com.mine.product.czmtr.ram.base.service.IBaseService;
 import com.vgtech.platform.common.utility.VGUtility;
+import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.BeanUtils;

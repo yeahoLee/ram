@@ -120,6 +120,14 @@ public class FlowableInfo {
     //还入部门资产管理员
     public static final String RETURNED_DEPT_ADMIN = "returnedDeptAdmin";
 
+    //调入部门管理员
+    public static final String TRANSFER_IN_DEPT_ADMIN = "transferInDeptAdmin";
+    //调入中心固定资产管理员
+    public static final String TRANSFER_IN_CENTER_ADMIN = "transferInCenterAdmin";
+    //调入部门部长
+    public static final String TRANSFER_IN_MINISTER = "transferInMinister";
+    //调入中心主任
+    public static final String TRANSFER_IN_CENTER_DIRECTOR = "transferInCenterDirector";
 
     public static final Map<String, Object> mapService = new HashMap<String, Object>() {
         {
@@ -199,7 +207,14 @@ public class FlowableInfo {
         NO_PRODUCTIVE_ASSET_ADMIN_LINE4("deptAssetAdminNextNode", "noProductiveAssetAdmin"),
         PRODUCTIVE_ASSET_ADMIN_LINE4("deptAssetAdminNextNode", "productiveAssetAdmin"),
         NO_PRODUCTIVE_DRAFT_LINE("draftNextNode", "noProductiveAssetAdmin"),
-        PRODUCTIVE_DRAFT_LINE("draftNextNode", "productiveAssetAdmin")
+        PRODUCTIVE_DRAFT_LINE("draftNextNode", "productiveAssetAdmin"),
+
+        //调拨
+        NO_PRODUCTIVE_TRANSFER_LINE("transferInMinisterNextNode", "noProductiveAssetAdmin"),
+        PRODUCTIVE_TRANSFER_LINE("transferInMinisterNextNode", "productiveAssetAdmin"),
+        TRANSFER_IN_DEPT_LINE("deptAdminNextNode", "transferInDeptAdmin"),
+        TRANSFER_IN_CENTER_LINE("deptAdminNextNode", "transferInCenterAdmin")
+
                 ;
 
         private String key;

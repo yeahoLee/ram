@@ -1,12 +1,5 @@
 package com.mine.product.czmtr.ram.asset.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.data.domain.Pageable;
-
 import com.mine.base.user.dto.UserInfoDto;
 import com.mine.platform.common.dto.PageableDto;
 import com.mine.platform.common.util.ISearchExpression;
@@ -14,6 +7,12 @@ import com.mine.product.czmtr.ram.asset.dto.AssetAssetDto;
 import com.mine.product.czmtr.ram.asset.dto.AssetInventoryDto;
 import com.mine.product.czmtr.ram.asset.dto.AssetInventoryScopeDto;
 import com.mine.product.czmtr.ram.asset.dto.MyAssetInventoryDto;
+import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface IAssetInventoryService extends IApproveNotify{
 
@@ -21,7 +20,9 @@ public interface IAssetInventoryService extends IApproveNotify{
     AssetInventoryDto createInventory(List<AssetAssetDto> assetDtoList,
                                       ArrayList<AssetInventoryScopeDto> assetInventoryScopeDtos, UserInfoDto userInfoDto, AssetInventoryDto dto);
 
-    // 获取datagrid
+	void deleteAssetInventoryWhenUpdate(String id);
+
+	// 获取datagrid
     Map<String, Object> getAssetInventoryForDataGrid(ISearchExpression iSearchExpression, AssetInventoryDto dto,
                                                      PageableDto pageableDto);
 

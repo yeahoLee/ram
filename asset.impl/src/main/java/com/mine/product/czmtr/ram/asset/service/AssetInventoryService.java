@@ -234,12 +234,19 @@ public class AssetInventoryService implements IAssetInventoryService {
     @Override
     public AssetInventoryDto createInventory(List<AssetAssetDto> assetDtoList,
                                              ArrayList<AssetInventoryScopeDto> assetInventoryScopeDtos, UserInfoDto userInfoDto, AssetInventoryDto dto) {
-        AssetInventoryModel model = convertAssetInventoryDtoToModel(dto, null);
-        model.setCreateId(userInfoDto.getId());
-        model.setInventoryStatus(FlowableInfo.WORKSTATUS.拟稿);
-        model.setCreateTimestamp(new Date());
-        model.setLaunchDate(new Date());
-        model.setInventoryRunningNum(getInventoryNum());
+        AssetInventoryModel model = null;
+        if (VGUtility.isEmpty(dto.getId())) {
+            model = convertAssetInventoryDtoToModel(dto, null);
+            model.setCreateId(userInfoDto.getId());
+            model.setInventoryStatus(FlowableInfo.WORKSTATUS.拟稿);
+            model.setCreateTimestamp(new Date());
+            model.setLaunchDate(new Date());
+            model.setInventoryRunningNum(getInventoryNum());
+        } else {
+            model = assetInventoryDao.findById(dto.getId()).get();
+            model.setReason(dto.getReason());
+            model.setInventoryName(dto.getInventoryName());
+        }
         model = assetInventoryDao.save(model);
         double amount = 0;
         if (assetDtoList.size() <= 0 && inventoryScopeExistAsset(assetInventoryScopeDtos)) {
@@ -248,11 +255,15 @@ public class AssetInventoryService implements IAssetInventoryService {
             //没有添加盘点范围和附加资产，则盘点所有资产；
             AssetAssetDto dto1 = new AssetAssetDto();
             //非 捐出、报废、盘亏、丢失
-            dto1.setAssetStatus("0,1,2,6,7,10");
+            dto1.setAssetStatus("0,1,2,6,7,8,10");
             dto1.setProduceType(model.getProduceType());
             Map<String, Object> resultMap = assetService.getAssetByQuerys(dto1, "1");
             List<AssetAssetDto> DtoList = (List<AssetAssetDto>) resultMap.get("rows");
-            amount = saveInventoryTempDuringCreate(DtoList, model, amount);
+            if (null != DtoList && DtoList.size() > 0) {
+                amount = saveInventoryTempDuringCreate(DtoList, model, amount);
+            } else {
+                throw new RuntimeException("当前没有可以盘点的资产!");
+            }
 
         } else {
             if (!assetInventoryScopeDtos.isEmpty()) {
@@ -315,6 +326,17 @@ public class AssetInventoryService implements IAssetInventoryService {
         assetInventoryScopeDao.deleteAssetInventoryScopeByInventoryById(id);
         // 删除主表；
         assetInventoryDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteAssetInventoryWhenUpdate(String id) {
+        if (VGUtility.isEmpty(id))
+            throw new RuntimeException("选择的盘点单为空！");
+        myAssetInventoryModelDao.deleteMyAssetInventoryByInventoryById(id);
+        // 删除主表下的我的盘点清单；
+        assetInventoryTempDao.deleteAssetInventoryTempByInventoryById(id);
+        // 删除主表下的盘点单范围；
+        assetInventoryScopeDao.deleteAssetInventoryScopeByInventoryById(id);
     }
 
     @Override
@@ -639,6 +661,7 @@ public class AssetInventoryService implements IAssetInventoryService {
                 // 资产是有管理员
                 String mId = e.getManagerId();
                 String deptId = e.getManageDeptId();
+                ASSET_PRODUCE_TYPE produceType = e.getProduceType();
                 if (!VGUtility.isEmpty(mId) && !VGUtility.isEmpty(deptId)) {
                     // 未盘点
                     if (set.isEmpty() || !set.contains(e.getId())) {
@@ -907,7 +930,7 @@ public class AssetInventoryService implements IAssetInventoryService {
     public Map<String, Object> getMyAssetInventoryForDataGrid(String assetInventoryId, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(),
                 Sort.by(Sort.Direction.ASC, "createTimestamp"));
-        Page<MyAssetInventoryModel> list = myAssetInventoryModelDao.findByassetInventoryModel(assetInventoryId,
+        Page<MyAssetInventoryModel> list = myAssetInventoryModelDao.findByAssetInventoryModelId(assetInventoryId,
                 pageRequest);
 
         List<MyAssetInventoryDto> dtolist = new ArrayList<MyAssetInventoryDto>();

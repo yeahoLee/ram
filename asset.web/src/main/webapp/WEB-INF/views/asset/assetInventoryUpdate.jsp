@@ -20,13 +20,13 @@
 <input id="type" value="${assetInventoryDto.produceTypeStr }" type="hidden"/>
 <div style="height:50px;width:100%;padding-top:0px;padding-left:10px;text-align:left;position:fixed;top:0px;left:0px;background:white;z-index:9999">
     <button id="saveInventorySubmit" class="btn btn-primary" style="margin-right: 5px;"
-            onclick="saveInventorySubmit();">
+            onclick="saveInventorySubmit(1);">
         <i class="fa fa-save align-top bigger-125" style="margin-right: 5px;"></i>保存
     </button>
-    <button id="saveAndCheckInventory" class="btn btn-primary" style="margin-right: 5px;"
-            onclick="saveAndCheckInventory();">
-        <i class="fa fa-save align-top bigger-125" style="margin-right: 5px;"></i>保存并发起审批
-    </button>
+    <%--<button id="saveAndCheckInventory" class="btn btn-primary" style="margin-right: 5px;"--%>
+            <%--onclick="saveInventorySubmit(2);">--%>
+        <%--<i class="fa fa-save align-top bigger-125" style="margin-right: 5px;"></i>保存并发起审批--%>
+    <%--</button>--%>
     <button class="btn btn-primary" onclick="location='./assetInventory_query'">
         <i class="fa fa-angle-left" style="margin-right: 5px;"></i>返回
     </button>
@@ -61,8 +61,11 @@
     </div>
 </div>
 
+<br/>
+<br/>
+
 <div id="assetScopeList" style="">
-    <span class="span-title">添加盘点范围</span>
+    <span class="span-title">添加盘点范围</span>（若未指定盘点范围同时未附加盘点资产，系统默认盘点当前物资类型下的全部资产）
     <hr class="hr-css"/>
     <div class="container-fluid">
         <div>
@@ -76,6 +79,9 @@
         </div>
     </div>
 </div>
+
+<br/>
+<br/>
 
 <div id="assetList" style="">
     <span class="span-title">附加盘点资产清单</span>

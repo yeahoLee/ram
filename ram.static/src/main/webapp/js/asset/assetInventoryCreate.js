@@ -163,6 +163,7 @@ function openDialig() {
 //保存盘点资产单
 function saveInventorySubmit(type) {
     $('#saveInventorySubmit').attr('disabled', "true");
+    $('#saveAndCheckInventory').attr('disabled', "true");
     //获取资产列表
     var data = $('#assetInventoryDataGrid').datagrid('getData');
     var assetList = JSON.stringify(data.rows);
@@ -178,16 +179,20 @@ function saveInventorySubmit(type) {
 
     if (isEmpty(inventoryName)) {
         $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
         $.messager.alert('错误', '请填写盘点单名称!', 'error');
         return;
     }
     if (isEmpty(reason)) {
         $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
         $.messager.alert('错误', '请填写盘点任务说明!', 'error');
         return;
     }
     var produceType = $('#produceType').combobox("getValue");
     if (produceType == null || produceType == "") {
+        $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
         $.messager.alert('错误', '请先选择物资的类型！', 'error');
         return;
     }
@@ -205,9 +210,8 @@ function saveInventorySubmit(type) {
             produceTypeStr: produceType
         },
         success: function (data) {
-            $('#saveInventorySubmit').removeAttr('disabled');
-
             if (type == 1) {
+
                 $.messager.alert('提示', '保存成功！', 'info', function () {
                     window.location.href = 'assetInventory_query';
                 });
@@ -223,6 +227,7 @@ function saveInventorySubmit(type) {
         },
         error: function (data) {
             $('#saveInventorySubmit').removeAttr('disabled');
+            $('#saveAndCheckInventory').removeAttr('disabled');
             AjaxErrorHandler(data);
         }
     });
@@ -270,8 +275,6 @@ function saveAndDistributionInventory() {
             lanuchDateStr: launchDateStr
         },
         success: function (data) {
-            $('#saveInventorySubmit').removeAttr('disabled');
-            $('#saveAndCheckInventory').removeAttr('disabled');
             $.messager.alert('提示', '保存成功！', 'info', function () {
                 window.location.href = 'assetInventory_query';
             });
@@ -463,6 +466,7 @@ $(function () {
         columns: [[
             {field: 'id', checkbox: true},
             {field: 'assetCode', title: '资产编码'},
+            {field: 'produceStr', title: '物资的类型'},
             {field: 'assetTypeStr', title: '资产类别'},
             {field: 'specAndModels', title: '规格型号'},
             {field: 'seriesNum', title: '序列号'},
@@ -507,6 +511,7 @@ $(function () {
         columns: [[
             {field: 'id', checkbox: true},
             {field: 'assetCode', title: '资产编码'},
+            {field: 'produceStr', title: '物资的类型'},
             {field: 'combinationAssetName', title: '资产名称'},
             {field: 'assetTypeStr', title: '资产类型'},
             {field: 'specAndModels', title: '规格型号'},

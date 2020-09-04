@@ -59,7 +59,7 @@ function closeAssetScopeDialog() {
     $('#assetScopeDialog').dialog('close');
 }
 
-function deleteAssetInventoryScopeSubmit(assetInventoryScopeId) {
+function deleteAssetInventoryScopeSubmit1(assetInventoryScopeId) {
     $.messager.confirm('确定', '确定要删除吗？', function (r) {
         if (r) {
             $.ajax({
@@ -78,6 +78,12 @@ function deleteAssetInventoryScopeSubmit(assetInventoryScopeId) {
         }
     })
 }
+
+//删除盘点范围
+function deleteAssetInventoryScopeSubmit(rowIndex) {
+    $('#assetInventoryScope').datagrid('deleteRow', rowIndex);
+}
+
 
 function openAdvaSearchDialog() {
     var advaSearch = $("#advaSearch").css("display");
@@ -134,6 +140,20 @@ function searchByQuerys() {
 
 function addAssetToList() {
     var data = $('#dataGridTable').datagrid('getSelections');
+    if (data.length == 0)
+        $.messager.alert('错误', '选择一个添加项！', 'error');
+
+    for (var index in data) {
+        var i = $('#assetInventoryDataGrid').datagrid("getRowIndex", data[index]);
+        if (i == -1)
+            $('#assetInventoryDataGrid').datagrid("appendRow", data[index]);
+    }
+    $('#assetInventoryDataGrid').datagrid("autoSizeColumn");
+    closeAssetListDialog();
+}
+
+function addAssetToList1() {
+    var data = $('#dataGridTable').datagrid('getSelections');
     var assetIdList = "";
     var assetInventoryId = $('#assetInventoryId').val();
     if (data.length == 0) {
@@ -173,6 +193,19 @@ function addAssetToList() {
 
 function removeAssetToList() {
     var data = $('#assetInventoryDataGrid').datagrid('getSelections');
+    if (data.length == 0) {
+        $.messager.alert('错误', '选择一个移除项！', 'error');
+        return false;
+    }
+    // 删除选中行
+    for (var i = data.length - 1; i >= 0; i--) {
+        var rowIndex = $('#assetInventoryDataGrid').datagrid('getRowIndex', data[i]);
+        $('#assetInventoryDataGrid').datagrid('deleteRow', rowIndex);
+    }
+}
+
+function removeAssetToList1() {
+    var data = $('#assetInventoryDataGrid').datagrid('getSelections');
     var assetInventoryId = $('#assetInventoryId').val();
     var assetInventoryTempIdList = "";
     if (data.length == 0) {
@@ -206,6 +239,11 @@ function removeAssetToList() {
 
 // 添加盘点范围
 function addInventoryScope() {
+    var produceType = $('#produceType').combobox("getValue");
+    if (produceType == null || produceType == "") {
+        $.messager.alert('错误', '请先选择物资的类型！', 'error');
+        return;
+    }
     $('#assetScopeDialog').dialog('center').dialog('open');
 }
 
@@ -222,9 +260,88 @@ function openDialig() {
     isOld = true;
 }
 
-// 保存盘点资产单
-function saveInventorySubmit() {
+//保存盘点资产单
+function saveInventorySubmit(type) {
     $('#saveInventorySubmit').attr('disabled', "true");
+    $('#saveAndCheckInventory').attr('disabled', "true");
+    //获取资产列表
+    var data = $('#assetInventoryDataGrid').datagrid('getData');
+    var assetList = JSON.stringify(data.rows);
+    ;
+    //获取盘点资产范围列表
+    var dataScope = $('#assetInventoryScope').datagrid('getData');
+    var inventoryScopeList = JSON.stringify(dataScope.rows);
+
+    var inventoryName = $('#inventoryName').val();
+    var now = new Date();
+    var launchDateStr = formatter(now, "yyyy-MM-dd");
+    var reason = $('#reason').val();
+
+    var assetInventoryId = $('#assetInventoryId').val();
+
+    if (isEmpty(inventoryName)) {
+        $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
+        $.messager.alert('错误', '请填写盘点单名称!', 'error');
+        return;
+    }
+    if (isEmpty(reason)) {
+        $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
+        $.messager.alert('错误', '请填写盘点任务说明!', 'error');
+        return;
+    }
+    var produceType = $('#produceType').combobox("getValue");
+    if (produceType == null || produceType == "") {
+        $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
+        $.messager.alert('错误', '请先选择物资的类型！', 'error');
+        return;
+    }
+
+    $.ajax({
+        url: 'assetInventory/update_assetinventory',
+        type: 'POST',
+        data: {
+            inventoryScopeList: inventoryScopeList,
+            assetList: assetList,
+            reason: reason,
+            inventoryName: inventoryName,
+            //sponsor : sponsor,
+            lanuchDateStr: launchDateStr,
+            produceTypeStr: produceType,
+            id: assetInventoryId
+        },
+        success: function (data) {
+            if (type == 1) {
+
+                $.messager.alert('提示', '保存成功！', 'info', function () {
+                    window.location.href = 'assetInventory_query';
+                });
+            } else {
+                var data1 = {};
+                data1.id=data.dto.id;
+                data1.formName = data.dto.inventoryName;
+                data1.serialNumber = data.dto.inventoryRunningNum;
+                data1.processDefKey = ASSETS_INVENTORY_TASK;
+                data1.resultLocation = "assetInventory_query";
+                getFirstNode(data1);
+            }
+        },
+        error: function (data) {
+            $('#saveInventorySubmit').removeAttr('disabled');
+            $('#saveAndCheckInventory').removeAttr('disabled');
+            AjaxErrorHandler(data);
+        }
+    });
+}
+
+
+
+// 保存盘点资产单
+function saveInventorySubmit1(type) {
+    $('#saveInventorySubmit').attr('disabled', "true");
+    $('#saveAndCheckInventory').attr('disabled', "true");
     // 获取资产列表
 // var data = $('#assetInventoryDataGrid').datagrid('getData');
 // var assetList = JSON.stringify(data.rows);
@@ -240,11 +357,13 @@ function saveInventorySubmit() {
 
     if (isEmpty(inventoryName)) {
         $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
         $.messager.alert('错误', '请填写盘点单名称!', 'error');
         return;
     }
     if (isEmpty(reason)) {
         $('#saveInventorySubmit').removeAttr('disabled');
+        $('#saveAndCheckInventory').removeAttr('disabled');
         $.messager.alert('错误', '请填写盘点任务说明!', 'error');
         return;
     }
@@ -254,7 +373,7 @@ function saveInventorySubmit() {
         return;
     }
     $.ajax({
-        url: 'assetInventory/update_assetinventory',
+        url: 'assetInventory/update_assetinventory1',
         type: 'POST',
         data: {
             reason: reason,
@@ -265,13 +384,13 @@ function saveInventorySubmit() {
             produceTypeStr: produceType
         },
         success: function (data) {
-            $('#saveInventorySubmit').removeAttr('disabled');
             $.messager.alert('提示', '保存成功！', 'info', function () {
                 window.location.href = 'assetInventory_query';
             });
         },
         error: function (data) {
             $('#saveInventorySubmit').removeAttr('disabled');
+            $('#saveAndCheckInventory').removeAttr('disabled');
             AjaxErrorHandler(data);
         }
     });
@@ -319,8 +438,6 @@ function saveAndCheckInventory() {
             id: assetInventoryId
         },
         success: function (data) {
-            $('#saveInventorySubmit').removeAttr('disabled');
-            $('#saveAndCheckInventory').removeAttr('disabled');
             $.messager.alert('提示', '保存成功！', 'info', function () {
                 window.location.href = 'assetInventory_query';
             });
@@ -435,7 +552,7 @@ function appendRowToDatagrid(num) {
         data.inventoryContent = data.inventoryContent.substring(0, data.inventoryContent.length - 1)
         data.inventoryContent = '所有' + data.inventoryContent + '的资产';
     }
-    if (isEmpty(data.inventoryContent)) {
+    /*if (isEmpty(data.inventoryContent)) {
         $('#uploadSaveBtnScope').removeAttr('disabled');
         $.messager.alert('错误', '盘点范围不能为空!', 'error');
         return;
@@ -456,7 +573,13 @@ function appendRowToDatagrid(num) {
             AjaxErrorHandler(data);
             $('#uploadSaveBtnScope').removeAttr('disabled');
         }
-    });
+    });*/
+
+    $('#assetInventoryScope').datagrid('appendRow', data); // 将数据绑定到datagrid
+    $('#assetInventoryScope').datagrid("autoSizeColumn");
+    closeAssetScopeDialog();
+    $('#uploadSaveBtnScope').removeAttr('disabled');
+
 }
 
 // 判断字符是否为空的方法
@@ -502,8 +625,8 @@ $(function () {
             title: '盘点数量'
         },
             {
-                field: 'id', title: '操作', formatter: function (value) { // value, row, index
-                    var returnVar = '<a href="javascript:void(0);" onClick="deleteAssetInventoryScopeSubmit(\'' + value + '\');">删除</a>'
+                field: 'id', title: '操作', formatter: function (value, row, index) { // value, row, index
+                    var returnVar = '<a href="javascript:void(0);" onClick="deleteAssetInventoryScopeSubmit(\'' + index + '\');">删除</a>'
                     return returnVar;
                 }
             },
@@ -564,6 +687,9 @@ $(function () {
         }, {
             field: 'assetCode',
             title: '资产编码'
+        }, {
+            field: 'produceStr',
+            title: '物资的类型'
         }, {
             field: 'assetTypeStr',
             title: '资产类别'
@@ -668,6 +794,9 @@ $(function () {
         }, {
             field: 'assetCode',
             title: '资产编码'
+        }, {
+            field: 'produceStr',
+            title: '物资的类型'
         }, {
             field: 'combinationAssetName',
             title: '资产名称'

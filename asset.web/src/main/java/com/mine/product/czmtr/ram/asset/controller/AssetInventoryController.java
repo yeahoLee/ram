@@ -1,19 +1,22 @@
 package com.mine.product.czmtr.ram.asset.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.mine.base.user.dto.UserInfoDto;
+import com.mine.platform.common.dto.PageableDto;
+import com.mine.product.czmtr.ram.asset.dao.AssetInventoryDao;
+import com.mine.product.czmtr.ram.asset.dao.MyAssetInventoryModelDao;
+import com.mine.product.czmtr.ram.asset.dto.*;
+import com.mine.product.czmtr.ram.asset.service.IAssetInventoryService;
+import com.mine.product.czmtr.ram.asset.service.IAssetInventoryTempService;
+import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_OPERATION;
+import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_RESULT;
+import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_WAY;
+import com.mine.product.czmtr.ram.base.service.IBaseService;
+import com.mine.product.czmtr.ram.base.service.RepeatSubmitCheck;
+import com.vgtech.platform.common.utility.MineSecureUtility;
+import com.vgtech.platform.common.utility.SpringSecureUserInfo;
+import com.vgtech.platform.common.utility.VGUtility;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,43 +24,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.mine.base.user.dto.UserInfoDto;
-import com.mine.platform.common.dto.PageableDto;
-import com.mine.platform.common.util.ISearchExpression;
-import com.mine.product.czmtr.ram.asset.dao.AssetInventoryDao;
-import com.mine.product.czmtr.ram.asset.dao.MyAssetInventoryModelDao;
-import com.mine.product.czmtr.ram.asset.dto.AssetAssetDto;
-import com.mine.product.czmtr.ram.asset.dto.AssetInventoryDto;
-import com.mine.product.czmtr.ram.asset.dto.AssetInventoryScopeDto;
-import com.mine.product.czmtr.ram.asset.dto.AssetInventoryTempDto;
-import com.mine.product.czmtr.ram.asset.dto.AssetUploadFileDto;
-import com.mine.product.czmtr.ram.asset.dto.MyAssetInventoryDto;
-import com.mine.product.czmtr.ram.asset.service.IAssetInventoryService;
-import com.mine.product.czmtr.ram.asset.service.IAssetInventoryTempService;
-import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_OPERATION;
-import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_RESULT;
-import com.mine.product.czmtr.ram.asset.service.IAssetService.INVENTORY_WAY;
-import com.mine.product.czmtr.ram.base.service.IBaseService;
-import com.vgtech.platform.common.utility.MineSecureUtility;
-import com.vgtech.platform.common.utility.SpringSecureUserInfo;
-import com.vgtech.platform.common.utility.VGUtility;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/assetInventory/")
@@ -436,6 +415,7 @@ public class AssetInventoryController {
      * @param dto
      * @return
      */
+    @RepeatSubmitCheck
     @PostMapping(value = "assetinventroy_create")
     @ResponseBody
     public ModelMap inventoryCreate(String inventoryScopeList, String assetList, AssetInventoryDto dto) {
@@ -597,12 +577,38 @@ public class AssetInventoryController {
      *
      * @return
      */
-    @PostMapping(value = "update_assetinventory")
+    @PostMapping(value = "update_assetinventory1")
     @ResponseBody
-    public String updateAssetInventory(AssetInventoryDto assetInventoryDto) {
+    public String updateAssetInventory1(AssetInventoryDto assetInventoryDto) {
         logger.info("Controller: Update AssetInventory ForDataGrid" + assetInventoryDto.toString());
         inventoryService.updateAssetInventory(assetInventoryDto);
         return "{\"success\":true}";
+    }
+
+
+    /**
+     * 更新盘点单任务
+     *
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "update_assetinventory")
+    public ModelMap updateAssetInventory(String inventoryScopeList, String assetList, AssetInventoryDto dto) {
+        logger.info("Controller: Update AssetInventory ForDataGrid" + dto.toString());
+        UserInfoDto userInfoDto = ((SpringSecureUserInfo) MineSecureUtility.currentUser()).getUserInfo();
+        List<AssetAssetDto> assetDtoList = JSON.parseObject(assetList, new TypeReference<ArrayList<AssetAssetDto>>() {
+        });
+        ArrayList<AssetInventoryScopeDto> assetInventoryScopeDtos = JSON.parseObject(inventoryScopeList,
+                new TypeReference<ArrayList<AssetInventoryScopeDto>>() {
+                });
+        //先删除，再创建
+        inventoryService.deleteAssetInventoryWhenUpdate(dto.getId());
+        AssetInventoryDto assetInventoryDto = inventoryService.createInventory(assetDtoList, assetInventoryScopeDtos,
+                userInfoDto, dto);
+        ModelMap map = new ModelMap();
+        map.put("dto", assetInventoryDto);
+        map.put("success", "true");
+        return map;
     }
 
     /**

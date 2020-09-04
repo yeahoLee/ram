@@ -35,7 +35,7 @@
 <input id="MyAssetInventoryId" value="${myAssetInventoryDto.id }" type="hidden"/>
 <div style="height: 50px; width: 100%; padding-top: 0px; padding-left: 10px; text-align: left; position: fixed; top: 0px; left: 0px; background: white; z-index: 9999">
     <button class="btn btn-primary"
-            onclick="location='./myassetinventory_query'">
+            onclick="window.history.go(-1)">
         <i class="fa fa-angle-left" style="margin-right: 5px;"></i>返回
     </button>
 </div>

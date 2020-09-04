@@ -60,8 +60,11 @@
     </div>
 </div>
 
+<br/>
+<br/>
+
 <div id="assetScopeList" style="">
-    <span class="span-title">添加盘点范围</span>
+    <span class="span-title">添加盘点范围</span> （若未指定盘点范围同时未附加盘点资产，系统默认盘点当前物资类型下的全部资产）
     <hr class="hr-css"/>
     <div class="container-fluid">
         <div>
@@ -75,6 +78,9 @@
         </div>
     </div>
 </div>
+
+<br/>
+<br/>
 
 <div id="assetList" style="">
     <span class="span-title">附加盘点资产清单</span>
